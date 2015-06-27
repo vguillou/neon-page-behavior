@@ -192,7 +192,7 @@ _my-neon-page.html_
 
 ## Demos
 
-[Here](https://vguillou.github.io/neon-page-behavior/demo/index.html)
+[Here](https://vguillou.github.io/webcomponents/neon-page-behavior/demo/index.html)
 
 ## License
 
