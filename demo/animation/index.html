@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+<head>
+	<title>neon-page-behavior animation demo</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+	<meta name="theme-color" content="#7986cb">
+	
+	 <script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
+  
+  <!-- Html imports -->
+  <link rel="import" href="../../../neon-animation/neon-animated-pages.html">
+  <link rel="import" href="../../../neon-animation/neon-animations.html">
+  <link rel="import" href="../../../paper-styles/paper-styles.html">
+  <link rel="import" href="demo-element-0.html">
+  <link rel="import" href="demo-element-1.html">
+  <link rel="import" href="demo-element-2.html">
+	
+	<style>
+		body {
+			font-family: Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+			margin: 0;
+		}
+  </style>
+
+  <style is="custom-style">
+		neon-animated-pages {
+			position: absolute;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+		}
+
+		.page {
+      color: white;
+      @apply(--paper-font-display2);
+    }
+
+    #previous {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+    }
+
+    #next {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+    }
+	</style>
+
+</head>
+<body class="fullbleed">
+
+<template is="dom-bind">
+  <neon-animated-pages class="flex" attr-for-selected="name" selected="{{selected}}">
+    <demo-element-0 name="page0" class="page"></demo-element-0>
+    <demo-element-1 name="page1" class="page"></demo-element-1>
+    <demo-element-2 name="page2" class="page"></demo-element-2>
+  </neon-animated-pages>
+  <button type="button" id="previous" on-click="previousPage">&lt;&lt; Previous Page</button>
+  <button type="button" id="next" on-click="nextPage">Next Page &gt;&gt;</button>
+</template>
+
+<script>
+  var scope = document.querySelector('template[is="dom-bind"]');
+
+  scope.previousPage = function() {
+    var pages = document.querySelector('neon-animated-pages');
+    pages.selectPrevious();
+  };
+  scope.nextPage = function() {
+    var pages = document.querySelector('neon-animated-pages');
+    pages.selectNext();
+  };
+
+  scope.selected = "page0";
+</script>
+
+</body>
+</html>

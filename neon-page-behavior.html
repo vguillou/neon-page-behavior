@@ -1,0 +1,207 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<script>
+  /**
+   * Make the most of Polymer's 'neon-animated-pages' effortlessly.
+   * NeonPageBehavior fires events allowing more control over a page's lifecycle,
+   * and allows your page element to use a different animation-configuration when
+   * transitioning to each different page.
+   * 
+   * Elements having the `NeonPageBehavior` and being a child of a `<neon-animated-pages>`
+   * element can listen to 4 new events:
+   * - entry-animation-start:
+   *      Called BEFORE the transition TO the element starts.
+   *      Useful to handle initialization before your element gets visible
+   *       (start loading data, animation optimisation,...).
+   * - entry-animation-finish:
+   *      Called AFTER the transition TO the element starts.
+   *      Useful to finish initialization of your element (allow user focus,...).
+   * - exit-animation-start:
+   *      Called BEFORE the transition FROM the element starts.
+   *      Useful to deal with exit tasks (disallow user focus, animation optimisation,...).
+   * - exit-animation-finish:
+   *      Called AFTER the transition FROM the element starts.
+   *      Useful to handle exit tasks when your element isn't visible anymore
+   *      (reset scroller position,...).
+   *
+   * Elements having the `NeonPageBehavior` and being child of a `<neon-animated-pages>`
+   * can also declared different `animationConfig` properties that will be used
+   * automatically for transitioning to and from each different page. These properties'
+   * names must respect the following naming convention: `animationConfig` + Capitalized
+   * value representing the page to transition from/to for the parent `<neon-animated-pages>`
+   * (see `selected` and `attrForSelected` properties in the `<neon-animated-pages>`
+   * documentation for more detail on this).
+   * If your element also have the `NeonSharedElementAnimatableBehavior`, you can similarly
+   * declare different `sharedElements` properties for each different page to transition
+   * from/to. The naming convention is the following: `sharedElements` + Capitalized
+   * value representing the page to transition from/to. You can also differentiate the
+   * `sharedElements` for the transition FROM a given page (entering this element)
+   * from the `sharedElements` for the transition TO a given page (exiting this element)
+   * by following this naming convention: `sharedElements` + Capitalized
+   * value representing the page to transition from/to + `Entry` or `Exit`.
+   * 
+   * @blurb Make the most of Polymer's 'neon-animated-pages' effortlessly. NeonPageBehavior fires events allowing more control over a page's lifecycle, and allows your page element to use a different animation-configuration when transitioning to each different page.
+   * @homepage https://github.com/vguillou/neon-page-behavior
+   * @demo https://vguillou.github.io/neon-page-behavior/demo/index.html
+   * @polymerBehavior
+   */
+  Polymer.NeonPageBehavior = [{
+    properties: {
+      _wasPageSelected: {
+        type: Boolean,
+        value: false
+      },
+
+      _defaultAnimationConfig: {
+        type: Object
+      },
+
+      _defaultSharedElements: {
+        type: Object
+      },
+
+      _neonPageBehaviorInitialized: {
+        type: Boolean,
+        value: false
+      },
+    },
+
+    attached: function() {
+      if (this.parentElement.localName === 'neon-animated-pages') {
+        this.parentElement.addEventListener('selected-changed', this._pageChanged.bind(this));
+        this.parentElement.addEventListener('neon-animation-finish', this._neonAnimationFinished.bind(this));
+
+        // Fire events for the very first page shown
+        if (this._pageChanged()) {
+          var thisPageValue = this._getPageValue(this);
+          this._fireNeonPageEvent('entry-animation-finish', undefined, undefined, thisPageValue, this);
+        }
+      }
+    },
+
+    detached: function() {
+      if (this.parentElement.localName === 'neon-animated-pages') {
+        this.parentElement.removeEventListener('selected-changed', this._pageChanged);
+        this.parentElement.removeEventListener('neon-animation-finish', this._neonAnimationFinished);
+      }
+    },
+
+    /**
+     * Method responsible for retrieving the `animationConfig` map
+     * to be used when transitioning from/to the page `pageValue`.
+     * By default, will get the property whose name is
+     * `animationConfig + pageValue` with the first letter of `pageValue`
+     * capitalized. If such a property does not exist, it will fall back
+     * on the `animationConfig` property.
+     * (ie if `pageValue`='home', the default implementation of this method
+     * will return the `animationConfigHome` property if it is defined, and
+     * `animationConfig` if not).
+     * 
+     * The page may override this method if necessary. If you do, the method
+     * MUST return `this._defaultAnimationConfig` as the fallback.
+     *
+     * @method _getAnimationConfigForPage
+     * @param {string} pageValue the value for the page to transition from/to
+     * (as in neon-animated-pages.selected).
+     */
+    _getAnimationConfigForPage: function(pageValue) {
+      if (!pageValue || pageValue.trim().length === 0) {
+        return this._defaultAnimationConfig;
+      }
+      var propertyName = 'animationConfig' + pageValue.charAt(0).toUpperCase() + pageValue.slice(1);
+      var animConfig = this[propertyName] ? this[propertyName] : this._defaultAnimationConfig;
+      return animConfig;
+    },
+
+    /**
+     * Method responsible for retrieving the `sharedElements` map
+     * to be used when transitioning from/to the page `pageValue`.
+     * By default, will get the property whose name is
+     * `sharedElements + pageValue + [Entry|Exit]` with the first letter of `pageValue`
+     * capitalized, and 'Entry' or 'Exit' being optional.
+     * If such a property does not exist, it will fall back
+     * on the `sharedElements` property.
+     * (ie if `pageValue`='home' and entering this page from the page 'home',
+     * the default implementation of this method will return the `sharedElementsHomeEntry`
+     * property if it is defined, `sharedElementsHome` otherwise and `sharedElements` if none
+     * of the 2 aforementioned properties are defined).
+     * 
+     * The page may override this method if necessary. If you do, the method
+     * MUST return `this._defaultSharedElements` as the fallback.
+     *
+     * @method _getSharedElementsForPage
+     * @param {string} pageValue the value for the page to transition from/to
+     * (as in neon-animated-pages.selected).
+     * @param {boolean} entry is `true` if this page is trnasitionning
+     * from the page `pageValue`, `false` otherwise.
+     */
+    _getSharedElementsForPage: function(pageValue, entry) {
+      if (!pageValue || pageValue.trim().length === 0) {
+        return this._defaultSharedElements;
+      }
+      var propertyName = 'sharedElements' + pageValue.charAt(0).toUpperCase() + pageValue.slice(1);
+      var propertyNameSuffix = entry ? 'Entry' : 'Exit';
+      var sharedElts = this[propertyName + propertyNameSuffix] ? this[propertyName + propertyNameSuffix] : (this[propertyName] ? this[propertyName] : this._defaultSharedElements);
+      return sharedElts;
+    },
+
+    _getPageValue: function(page) {
+      var value;
+      if (this.parentElement.attrForSelected) {
+        value = this.parentElement._valueForItem(page);
+      } else {
+        value = this.parentElement.indexOf(page);
+      }
+      return value !== undefined && value !== null ? value.toString() : value;
+    },
+
+    _pageChanged: function() {
+      var eventToFire, transitionPageValue;
+      var thisPageValue = this._getPageValue(this);
+
+      if (!this._neonPageBehaviorInitialized) {
+        this._defaultAnimationConfig = this.animationConfig;
+        this._defaultSharedElements = this.sharedElements;
+        this._neonPageBehaviorInitialized = true;
+      }
+
+      if (this.parentElement.selected !== undefined && this.parentElement.selected !== null && this.parentElement.selected.toString() === thisPageValue) {
+        this._wasPageSelected = true;
+        eventToFire = 'entry-animation-start';
+        transitionPageValue = this._getPageValue(this.parentElement.selectedItem);
+      } else if (this._wasPageSelected) {
+        this._wasPageSelected = false;
+        eventToFire = 'exit-animation-start';
+        transitionPageValue = this.parentElement.selected;
+        transitionPageValue = (transitionPageValue !== undefined && transitionPageValue !== null) ? transitionPageValue.toString() : transitionPageValue;
+      }
+
+      if (transitionPageValue) {
+        this.animationConfig = this._getAnimationConfigForPage(transitionPageValue);
+        this.sharedElements = this._getSharedElementsForPage(transitionPageValue, this._wasPageSelected);
+      }
+
+      if (eventToFire) {
+        this._fireNeonPageEvent(eventToFire, this._wasPageSelected ? transitionPageValue : thisPageValue, this._wasPageSelected ? this.parentElement.selectedItem : this, this._wasPageSelected ? thisPageValue : transitionPageValue, this._wasPageSelected ? this : this.parentElement._valueToItem(transitionPageValue));
+      }
+      return this._wasPageSelected;
+    },
+
+    _neonAnimationFinished: function(event) {
+      var eventToFire;
+      if (event.detail.toPage === this) {
+        eventToFire = 'entry-animation-finish';
+      } else if (event.detail.fromPage === this) {
+        eventToFire = 'exit-animation-finish';
+      }
+      if (eventToFire) {
+        this._fireNeonPageEvent(eventToFire, this._getPageValue(event.detail.fromPage), event.detail.fromPage, this._getPageValue(event.detail.toPage), event.detail.toPage);
+      }
+    },
+
+    _fireNeonPageEvent: function(eventName, from, fromPage, to, toPage) {
+      var eventDetails = {animationConfig: this.animationConfig, sharedElements: this.sharedElements, from: from === to ? undefined : from, fromPage: fromPage === toPage ? undefined : fromPage, to: to, toPage: toPage};
+      this.fire(eventName, eventDetails, {bubbles: false});
+    }
+  }];
+</script>

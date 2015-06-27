@@ -1,0 +1,61 @@
+<!-- Html imports -->
+<link rel="import" href="../../../polymer/polymer.html">
+<link rel="import" href="../../../neon-animation/neon-animatable-behavior.html">
+<link rel="import" href="../../neon-page-behavior.html">
+
+<!-- Element with the neon-page-behavior -->
+<dom-module id="demo-element">
+	<template>
+		<div>{{title}}</div>
+		<div id="loggingDiv" style="font-size: 16px;"></div>
+	</template>
+	<script>
+		Polymer({
+
+    	is: 'demo-element',
+
+    	behaviors: [
+    	  Polymer.NeonAnimatableBehavior,
+    	  Polymer.NeonPageBehavior
+    	],
+
+			properties: {
+				title: {
+	        type: String
+	      }
+			},
+
+			listeners: {
+	      'entry-animation-start': 'onEntryStart',
+	      'entry-animation-finish': 'onEntryFinish',
+	      'exit-animation-start': 'onExitStart',
+	      'exit-animation-finish': 'onExitFinish'
+	    },
+
+			onEntryStart: function(e) {
+				while (this.$.loggingDiv.firstChild) {
+   			 this.$.loggingDiv.removeChild(this.$.loggingDiv.firstChild);
+				}
+				this.addLog(this.title + ' entry animation starts');
+			},
+			onEntryFinish: function(e) {
+				this.addLog(this.title + ' entry animation finished');
+			},
+			onExitStart: function(e) {
+				this.addLog(this.title + ' exit animation starts');
+			},
+			onExitFinish: function(e) {
+				this.addLog(this.title + ' exit animation finished');
+			},
+			addLog: function(msg) {
+				this.message = msg;
+				var p = document.createElement("P");
+				var t = document.createTextNode(msg);
+				p.appendChild(t);
+				p.className += this.classList[0];
+				document.querySelector('#logger').appendChild(p);
+				this.$.loggingDiv.appendChild(p.cloneNode(true));
+			}
+		});
+	</script>
+</polymer-element>

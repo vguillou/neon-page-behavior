@@ -1,0 +1,69 @@
+<!-- Html imports -->
+<link rel="import" href="../../../polymer/polymer.html">
+<link rel="import" href="../../../neon-animation/neon-shared-element-animatable-behavior.html">
+<link rel="import" href="../../neon-page-behavior.html">
+
+<!-- Element with the neon-page-behavior -->
+<dom-module id="demo-element-1">
+  <style>
+    :host {
+      display: block;
+    }
+
+    #footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 20vw;
+      line-height: 20vw;
+      background: red;
+      text-align: center;
+    }
+  </style>
+  <template>
+    <div id="footer">
+      <span>Page 1</span>
+    </div>
+  </template>
+  <script>
+    Polymer({
+
+      is: 'demo-element-1',
+
+      behaviors: [
+        Polymer.NeonSharedElementAnimatableBehavior,
+        Polymer.NeonPageBehavior
+      ],
+
+      properties: {
+        // Here the animation config is the same for Page 0 and Page 2: No need to specify them separately
+        animationConfig: {
+          type: Object,
+          value: function() {
+            return {
+              'entry': [{
+                name: 'hero-animation',
+                id: 'hero',
+                toPage: this
+              }],
+              'exit': [{
+                name: 'hero-animation',
+                id: 'hero',
+                fromPage: this
+              }]
+            };
+          }
+        },
+        sharedElements: {
+          type: Object,
+          value: function() {
+            return {
+              'hero': this.$.footer
+            };
+          }
+        }
+      }
+    });
+  </script>
+</polymer-element>
