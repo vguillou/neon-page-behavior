@@ -41,25 +41,25 @@ _my-neon-page.html_
 	<script>
 		Polymer({
 
-    	is: 'my-neon-page',
+			is: 'my-neon-page',
 
-    	behaviors: [
-    	  Polymer.NeonAnimatableBehavior,
-    	  Polymer.NeonPageBehavior
-    	],
+			behaviors: [
+			  Polymer.NeonAnimatableBehavior,
+			  Polymer.NeonPageBehavior
+			],
 
 			properties: {
 				title: {
-	        type: String
-	      }
+					type: String
+				}
 			},
 
 			listeners: {
-	      'entry-animation-start': 'onEntryStart',
-	      'entry-animation-finish': 'onEntryFinish',
-	      'exit-animation-start': 'onExitStart',
-	      'exit-animation-finish': 'onExitFinish'
-	    },
+			  'entry-animation-start': 'onEntryStart',
+			  'entry-animation-finish': 'onEntryFinish',
+			  'exit-animation-start': 'onExitStart',
+			  'exit-animation-finish': 'onExitFinish'
+			},
 
 			onEntryStart: function(e) {
 				console.log(this.title + ' entry animation starts');
@@ -192,7 +192,7 @@ _my-neon-page.html_
 
 ## Demos
 
-[Here.](https://vguillou.github.io/neon-page-behavior/demo/index.html)
+[Here](https://vguillou.github.io/neon-page-behavior/demo/index.html)
 
 ## License
 
