@@ -138,7 +138,7 @@ _my-neon-page.html_
           }
         },
 
-        // Specific animation config for Page2: Entering from Page2, myHero1 is a hero and myHero2 scales, opposite when exiting to Page2
+        // Specific animation config for Page2: Entering from Page2, myHero1 is a hero and myHero2 scales. The other way around when exiting to Page2
         animationConfigPage2: {
           type: Object,
           value: function() {
