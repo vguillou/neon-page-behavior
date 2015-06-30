@@ -9,20 +9,36 @@
    * 
    * Elements having the `NeonPageBehavior` and being a child of a `<neon-animated-pages>`
    * element can listen to 4 new events:
-   * - entry-animation-start:
+   * - `entry-animation-start`:
    *      Called BEFORE the transition TO the element starts.
    *      Useful to handle initialization before your element gets visible
-   *       (start loading data, animation optimisation,...).
-   * - entry-animation-finish:
-   *      Called AFTER the transition TO the element starts.
+   *      (start loading data, animation optimisation,...).
+   * - `entry-animation-finish`:
+   *      Called AFTER the transition TO the element finished.
    *      Useful to finish initialization of your element (allow user focus,...).
-   * - exit-animation-start:
+   * - `exit-animation-start`:
    *      Called BEFORE the transition FROM the element starts.
    *      Useful to deal with exit tasks (disallow user focus, animation optimisation,...).
-   * - exit-animation-finish:
-   *      Called AFTER the transition FROM the element starts.
+   * - `exit-animation-finish`:
+   *      Called AFTER the transition FROM the element finished.
    *      Useful to handle exit tasks when your element isn't visible anymore
    *      (reset scroller position,...).
+   *
+   * The `detail` of the dispatched events contains the following properties :
+   * - `animationConfig`:
+   *      The `animationConfig` of the target page for the transition.
+   * - `sharedElements`:
+   *      The `sharedElements` of the target page for the transition.
+   * - `from`:
+   *      The identifier of the original page of the transition, as in
+   *      `neon-animated-pages.selected`.
+   * - `fromPage`:
+   *      The reference to the original page of the transition.
+   * - `to`:
+   *      The identifier of the destination page of the transition, as in
+   *      `neon-animated-pages.selected`.
+   * - `toPage`:
+   *      The reference to the destination page of the transition.
    *
    * Elements having the `NeonPageBehavior` and being child of a `<neon-animated-pages>`
    * can also declared different `animationConfig` properties that will be used
@@ -103,6 +119,8 @@
      * @method _getAnimationConfigForPage
      * @param {string} pageValue the value for the page to transition from/to
      * (as in neon-animated-pages.selected).
+     * @return {object} the `animationConfig` to use for the transition
+     * from/to the page `pageValue`
      */
     _getAnimationConfigForPage: function(pageValue) {
       if (!pageValue || pageValue.trim().length === 0) {
@@ -134,6 +152,8 @@
      * (as in neon-animated-pages.selected).
      * @param {boolean} entry is `true` if this page is trnasitionning
      * from the page `pageValue`, `false` otherwise.
+     * @return {object} the `sharedElements` to use for the transition
+     * from or /to (depending on `entry`) the page `pageValue`
      */
     _getSharedElementsForPage: function(pageValue, entry) {
       if (!pageValue || pageValue.trim().length === 0) {
@@ -147,10 +167,12 @@
 
     _getPageValue: function(page) {
       var value;
-      if (this.parentElement.attrForSelected) {
-        value = this.parentElement._valueForItem(page);
-      } else {
-        value = this.parentElement.indexOf(page);
+      if (page) {
+        if (this.parentElement.attrForSelected) {
+          value = this.parentElement._valueForItem(page);
+        } else {
+          value = this.parentElement.indexOf(page);
+        }
       }
       return value !== undefined && value !== null ? value.toString() : value;
     },
@@ -182,7 +204,11 @@
       }
 
       if (eventToFire) {
-        this._fireNeonPageEvent(eventToFire, this._wasPageSelected ? transitionPageValue : thisPageValue, this._wasPageSelected ? this.parentElement.selectedItem : this, this._wasPageSelected ? thisPageValue : transitionPageValue, this._wasPageSelected ? this : this.parentElement._valueToItem(transitionPageValue));
+        this._fireNeonPageEvent(eventToFire,
+          this._wasPageSelected ? transitionPageValue : thisPageValue,
+          this._wasPageSelected ? this.parentElement.selectedItem : this,
+          this._wasPageSelected ? thisPageValue : transitionPageValue,
+          this._wasPageSelected ? this : transitionPageValue ? this.parentElement._valueToItem(transitionPageValue) : undefined);
       }
       return this._wasPageSelected;
     },
@@ -200,7 +226,14 @@
     },
 
     _fireNeonPageEvent: function(eventName, from, fromPage, to, toPage) {
-      var eventDetails = {animationConfig: this.animationConfig, sharedElements: this.sharedElements, from: from === to ? undefined : from, fromPage: fromPage === toPage ? undefined : fromPage, to: to, toPage: toPage};
+      var eventDetails = {
+        animationConfig: this.animationConfig,
+        sharedElements: this.sharedElements,
+        from: from === to ? undefined : from,
+        fromPage: fromPage === toPage ? undefined : fromPage,
+        to: to,
+        toPage: toPage
+      };
       this.fire(eventName, eventDetails, {bubbles: false});
     }
   }];

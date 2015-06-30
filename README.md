@@ -6,21 +6,42 @@ _Make the most of Polymer's 'neon-animated-pages' effortlessly. NeonPageBehavior
 
 Elements having the `NeonPageBehavior` and being a child of a `<neon-animated-pages>` element can listen to 4 new events:
 
-* **entry-animation-start**:
+* **`entry-animation-start`**:
 Called BEFORE the transition TO the element starts.
 Useful to handle initialization before your element gets visible (start loading data, animation optimisation,...).
 
-* **entry-animation-finish**:
+* **`entry-animation-finish`**:
 Called AFTER the transition TO the element finished.
 Useful to finish initialization of your element (allow user focus,...).
 
-* **exit-animation-start**:
+* **`exit-animation-start`**:
 Called BEFORE the transition FROM the element starts.
 Useful to deal with exit tasks (disallow user focus, animation optimisation,...).
 
-* **exit-animation-finish**:
+* **`exit-animation-finish`**:
 Called AFTER the transition FROM the element finished.
 Useful to handle exit tasks when your element isn't visible anymore (reset scroller position,...).
+
+The `detail` of the dispatched events contains the following properties :
+
+* **`animationConfig`**:
+The `animationConfig` of the target page for the transition.
+
+* **`sharedElements`**:
+The `sharedElements` of the target page for the transition.
+
+* **`from`**:
+The identifier of the original page of the transition, as in `neon-animated-pages.selected`.
+
+* **`fromPage`**:
+The reference to the original page of the transition.
+
+* **`to`**:
+The identifier of the destination page of the transition, as in `neon-animated-pages.selected`.
+
+* **`toPage`**:
+The reference to the destination page of the transition.
+
 
 ### Example
 
