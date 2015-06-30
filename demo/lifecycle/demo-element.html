@@ -36,16 +36,16 @@
 				while (this.$.loggingDiv.firstChild) {
    			 this.$.loggingDiv.removeChild(this.$.loggingDiv.firstChild);
 				}
-				this.addLog(this.title + ' entry animation starts');
+				this.addLog(this.title + ' entry animation starts from page "' + e.detail.from + '"');
 			},
 			onEntryFinish: function(e) {
-				this.addLog(this.title + ' entry animation finished');
+				this.addLog(this.title + ' entry animation finished from page "' + e.detail.from + '"');
 			},
 			onExitStart: function(e) {
-				this.addLog(this.title + ' exit animation starts');
+				this.addLog(this.title + ' exit animation starts to page "' + e.detail.to + '"');
 			},
 			onExitFinish: function(e) {
-				this.addLog(this.title + ' exit animation finished');
+				this.addLog(this.title + ' exit animation finished to page "' + e.detail.to + '"');
 			},
 			addLog: function(msg) {
 				this.message = msg;
