@@ -11,7 +11,7 @@ Called BEFORE the transition TO the element starts.
 Useful to handle initialization before your element gets visible (start loading data, animation optimisation,...).
 
 * **entry-animation-finish**:
-Called AFTER the transition TO the element starts.
+Called AFTER the transition TO the element finished.
 Useful to finish initialization of your element (allow user focus,...).
 
 * **exit-animation-start**:
@@ -19,7 +19,7 @@ Called BEFORE the transition FROM the element starts.
 Useful to deal with exit tasks (disallow user focus, animation optimisation,...).
 
 * **exit-animation-finish**:
-Called AFTER the transition FROM the element starts.
+Called AFTER the transition FROM the element finished.
 Useful to handle exit tasks when your element isn't visible anymore (reset scroller position,...).
 
 ### Example
