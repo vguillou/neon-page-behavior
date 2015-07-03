@@ -88,7 +88,7 @@
         this.parentElement.addEventListener('neon-animation-finish', this._neonAnimationFinished.bind(this));
 
         // Fire events for the very first page shown
-        if (this._pageChanged()) {
+        if (this._pageChanged() && !this.parentElement.animateInitialSelection) {
           var thisPageValue = this._getPageValue(this);
           this._fireNeonPageEvent('entry-animation-finish', undefined, undefined, thisPageValue, this);
         }

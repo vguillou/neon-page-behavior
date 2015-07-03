@@ -76,7 +76,7 @@
 <body class="fullbleed">
 
 <template is="dom-bind">
-	<neon-animated-pages class="flex" selected="{{selected}}" on-click="changePage" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
+	<neon-animated-pages class="flex" selected="{{selected}}" on-click="changePage" animate-initial-selection="true" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
 		<demo-element title="Page 0" class="red"></demo-element>
 		<demo-element title="Page 1" class="green"></demo-element>
 		<demo-element title="Page 2" class="blue"></demo-element>
