@@ -1,10 +1,16 @@
 # neon-page-behavior
 
-_Make the most of Polymer's 'neon-animated-pages' effortlessly. NeonPageBehavior fires events allowing more control over a page's lifecycle, and allows your page element to use a different animation-configuration when transitioning to each different page._
+_Make the most of Polymer's [`<neon-animated-pages>`](https://github.com/PolymerElements/neon-animation#page-transitions) effortlessly. NeonPageBehavior fires events allowing more control over a page's lifecycle, and allows your page element to use a different animation-configuration when transitioning to each different page._
 
+* [Page lifecycle](#lifecycle)
+* [Declaring different animation configurations](#animation)
+  * [animationConfig](#animation_config)
+  * [sharedElements](#shared_elements)
+
+<a name="lifecycle"></a>
 ## Page lifecycle
 
-Elements having the `NeonPageBehavior` and being a child of a `<neon-animated-pages>` element can listen to 4 new events:
+Elements having the `NeonPageBehavior` and being a child of a [`<neon-animated-pages>`](https://github.com/PolymerElements/neon-animation#page-transitions) element can listen to 4 new events:
 
 * **`entry-animation-start`**:
 Called BEFORE the transition TO the element starts.
@@ -99,13 +105,25 @@ _my-neon-page.html_
 </polymer-element>
 ```
 
-## Animation configurations
+<a name="animation"></a>
+## Declaring different animation configurations
 
-Elements having the `NeonPageBehavior` and being child of a `<neon-animated-pages>` can also declared different `animationConfig` properties that will be used automatically for transitioning to and from each different page.
-These properties' names must respect the following naming convention: `animationConfig` + Capitalized value representing the page to transition from/to for the parent `<neon-animated-pages>` (see `selected` and `attrForSelected` properties in the `<neon-animated-pages>` documentation for more detail on this).
+<a name="animation_config"></a>
+### animationConfig
+Elements having the `NeonPageBehavior` and being child of a [`<neon-animated-pages>`](https://github.com/PolymerElements/neon-animation#page-transitions) can also declared different `animationConfig` properties that will be used automatically for transitioning to and from each different page.
+These properties' names must respect the following naming convention:
 
-If your element also have the `NeonSharedElementAnimatableBehavior`, you can similarly declare different `sharedElements` properties for each different page to transition from/to. The naming convention is the following: `sharedElements` + Capitalized value representing the page to transition from/to.
-You can also differentiate the `sharedElements` for the transition FROM a given page (entering this element) from the `sharedElements` for the transition TO a given page (exiting this element) by following this naming convention: `sharedElements` + Capitalized value representing the page to transition from/to + `Entry` or `Exit`.
+`animationConfig` + Capitalized value representing the page to transition from/to for the parent `<neon-animated-pages>` (see `selected` and `attrForSelected` properties in the [`<neon-animated-pages>`](https://github.com/PolymerElements/neon-animation#page-transitions) documentation for more detail on this), all normalized to become a valid javascript variable name.
+
+<a name="shared_elements"></a>
+### sharedElements
+If your element also have the [`NeonSharedElementAnimatableBehavior`](https://elements.polymer-project.org/elements/neon-animation?active=Polymer.NeonSharedElementAnimatableBehavior), you can similarly declare different `sharedElements` properties for each different page to transition from/to. The naming convention is the following:
+
+`sharedElements` + Capitalized value representing the page to transition from/to, all normalized to become a valid javascript variable name.
+
+You can also differentiate the `sharedElements` for the transition FROM a given page (entering this element) from the `sharedElements` for the transition TO a given page (exiting this element) by following this naming convention:
+
+`sharedElements` + Capitalized value representing the page to transition from/to + `Entry` or `Exit`, all normalized to become a valid javascript variable name.
 
 ### Example
 
