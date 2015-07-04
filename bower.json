@@ -22,10 +22,18 @@
     "url": "git://github.com/vguillou/neon-page-behavior.git"
   },
   "dependencies": {
-	  "polymer": "Polymer/polymer#^1.0"
+	  "polymer": "Polymer/polymer#^1.0.0"
   },
   "devDependencies": {
-    "iron-component-page": "polymerelements/iron-component-page#^1.0",
-    "neon-animation": "PolymerElements/neon-animation#^1.0"
+    "iron-component-page": "polymerelements/iron-component-page#^1.0.0",
+    "neon-animation": "PolymerElements/neon-animation#^1.0.0",
+    "paper-styles": "PolymerElements/paper-styles#^1.0.0",
+    "more-routing": "PolymerLabs/more-routing#^1.0.0",
+    "paper-drawer-panel": "PolymerElements/paper-drawer-panel#^1.0.0",
+    "paper-header-panel": "PolymerElements/paper-header-panel#^1.0.0",
+    "paper-toolbar": "PolymerElements/paper-toolbar#^1.0.0",
+    "paper-menu": "PolymerElements/paper-menu#^1.0.0",
+    "paper-item": "PolymerElements/paper-item#^1.0.0",
+    "paper-icon-button": "PolymerElements/paper-icon-button#^1.0.0"
   }
 }
