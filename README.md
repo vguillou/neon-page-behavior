@@ -54,8 +54,8 @@ The reference to the destination page of the transition.
 _index.html_
 ```html
 <neon-animated-pages class="flex" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
-	<my-neon-page title="Page 1" style="background-color: red;"></neon-page>
-	<my-neon-page title="Page 2" style="background-color: blue;"></neon-page>
+	<my-neon-page title="Page 1" style="background-color: red;"></my-neon-page>
+	<my-neon-page title="Page 2" style="background-color: blue;"></my-neon-page>
 </neon-animated-pages>
 ```
 
@@ -102,7 +102,7 @@ _my-neon-page.html_
 			}
 		});
 	</script>
-</polymer-element>
+</dom-module>
 ```
 
 <a name="animation"></a>
@@ -130,7 +130,7 @@ You can also differentiate the `sharedElements` for the transition FROM a given 
 _index.html_
 ```html
 <neon-animated-pages class="flex" attr-for-selected="name">
-	<my-neon-page name="Page1" style="background-color: red;"></neon-page>
+	<my-neon-page name="Page1" style="background-color: red;"></my-neon-page>
 	<my-page-2 name="Page2" style="background-color: blue;"></my-page-2>
 	<my-page-3 name="Page3" style="background-color: green;"></my-page-3>
 	<my-page-4 name="Page4" style="background-color: yellow;"></my-page-4>
@@ -226,7 +226,7 @@ _my-neon-page.html_
       }
     });
   </script>
-</polymer-element>
+</dom-module>
 ```
 
 ## Demos
