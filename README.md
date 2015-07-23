@@ -233,6 +233,13 @@ _my-neon-page.html_
 
 [Here](https://vguillou.github.io/webcomponents/neon-page-behavior/demo/index.html)
 
+## TODOs
+
+1. Let the dev configure which "animationConfig" object should be used for the transitions to each page, instead of directly fetching the "animationConfig[NextPage]" or "animationConfig[PreviousPage]" property of the neon-page
+2. Improve documentation
+3. ...
+4. Profit
+
 ## License
 
 [MIT License](http://opensource.org/licenses/MIT)
