@@ -63,10 +63,11 @@
    *
    * These properties' names must respect the following naming convention:
    *
-   * `animationConfig` + Capitalized value representing the page to transition from/to for the parent `<neon-animated-pages>`
+   * `animationConfig` + value representing the page to transition from/to for the parent `<neon-animated-pages>`
    * (see `selected` and `attrForSelected` properties in the
    * [`<neon-animated-pages>`](https://github.com/PolymerElements/neon-animation#page-transitions)
    * documentation for more detail on this), all normalized to become a valid javascript variable name.
+   * (ie if `pageValue`='home-alone', the `animationConfigHomeAlone` property will be used if it is defined, and `animationConfig` if not).
    *
    * <a name="shared_elements"></a>
    * ### sharedElements
@@ -74,25 +75,33 @@
    * declare different `sharedElements` properties for each different page to transition
    * from/to. The naming convention is the following:
    * 
-   * `sharedElements` + Capitalized value representing the page to transition from/to, all normalized to become a valid javascript variable name.
+   * `sharedElements` + value representing the page to transition from/to, all normalized to become a valid javascript variable name.
+   * (ie if `pageValue`='home-alone', the `sharedElementsHomeAlone` property will be used if it is defined, and `sharedElements` if not).
    * 
    * You can also differentiate the
    * `sharedElements` for the transition FROM a given page (entering this element)
    * from the `sharedElements` for the transition TO a given page (exiting this element)
    * by following this naming convention:
    * 
-   * `sharedElements` + Capitalized value representing the page to transition from/to + `Entry` or `Exit`, all normalized to become a valid javascript variable name.
+   * `sharedElements` + value representing the page to transition from/to + `Entry` or `Exit`, all normalized to become a valid javascript variable name.
+   * (ie if `pageValue`='home-alone' and entering this page from the page 'home-alone', the `sharedElementsHomeAloneEntry` property will be used if it is defined, `sharedElementsHomeAlone` otherwise and `sharedElements` if none of the 2 aforementioned properties are defined).
    * 
    * @blurb Make the most of Polymer's 'neon-animated-pages' effortlessly. NeonPageBehavior fires events allowing more control over a page's lifecycle, and allows your page element to use a different animation-configuration when transitioning to each different page.
    * @homepage https://github.com/vguillou/neon-page-behavior
-   * @demo https://vguillou.github.io/neon-page-behavior/demo/index.html
+   * @demo demo/index.html
    * @polymerBehavior
    */
   Polymer.NeonPageBehavior = [{
     properties: {
-      _wasPageSelected: {
+      /**
+       * Flag set to `true` only if this page is the one selected.
+       */
+      selectedPage: {
         type: Boolean,
-        value: false
+        value: false,
+        notify: true,
+        reflectToAttribute: true,
+        readOnly: true
       },
 
       _defaultAnimationConfig: {
@@ -133,11 +142,10 @@
      * Method responsible for retrieving the `animationConfig` map
      * to be used when transitioning from/to the page `pageValue`.
      * By default, will get the property whose name is
-     * `animationConfig + pageValue` with the first letter of `pageValue`
-     * capitalized. If such a property does not exist, it will fall back
-     * on the `animationConfig` property.
-     * (ie if `pageValue`='home', the default implementation of this method
-     * will return the `animationConfigHome` property if it is defined, and
+     * `animationConfig + pageValue`. If such a property does not exist,
+     * it will fall back on the `animationConfig` property.
+     * (ie if `pageValue`='home-alone', the default implementation of this method
+     * will return the `animationConfigHomeAlone` property if it is defined, and
      * `animationConfig` if not).
      * 
      * The page may override this method if necessary. If you do, the method
@@ -154,22 +162,19 @@
       if (!normalizedPageValue) {
         return this._defaultAnimationConfig;
       }
-      var propertyName = 'animationConfig' + normalizedPageValue;
-      var animConfig = this[propertyName] ? this[propertyName] : this._defaultAnimationConfig;
-      return animConfig;
+      return this._getAttributeCaseInsensitive('animationConfig' + normalizedPageValue) || this._defaultAnimationConfig;
     },
 
     /**
      * Method responsible for retrieving the `sharedElements` map
      * to be used when transitioning from/to the page `pageValue`.
      * By default, will get the property whose name is
-     * `sharedElements + pageValue + [Entry|Exit]` with the first letter of `pageValue`
-     * capitalized, and 'Entry' or 'Exit' being optional.
+     * `sharedElements + pageValue + [Entry|Exit]` with 'Entry' or 'Exit' being optional.
      * If such a property does not exist, it will fall back
      * on the `sharedElements` property.
-     * (ie if `pageValue`='home' and entering this page from the page 'home',
-     * the default implementation of this method will return the `sharedElementsHomeEntry`
-     * property if it is defined, `sharedElementsHome` otherwise and `sharedElements` if none
+     * (ie if `pageValue`='home-alone' and entering this page from the page 'home-alone',
+     * the default implementation of this method will return the `sharedElementsHomeAloneEntry`
+     * property if it is defined, `sharedElementsHomeAlone` otherwise and `sharedElements` if none
      * of the 2 aforementioned properties are defined).
      * 
      * The page may override this method if necessary. If you do, the method
@@ -178,7 +183,7 @@
      * @method _getSharedElementsForPage
      * @param {string} pageValue the value for the page to transition from/to
      * (as in neon-animated-pages.selected).
-     * @param {boolean} entry is `true` if this page is trnasitionning
+     * @param {boolean} entry is `true` if this page is transitionning
      * from the page `pageValue`, `false` otherwise.
      * @return {object} the `sharedElements` to use for the transition
      * from or /to (depending on `entry`) the page `pageValue`
@@ -190,8 +195,7 @@
       }
       var propertyName = 'sharedElements' + normalizedPageValue;
       var propertyNameSuffix = entry ? 'Entry' : 'Exit';
-      var sharedElts = this[propertyName + propertyNameSuffix] ? this[propertyName + propertyNameSuffix] : (this[propertyName] ? this[propertyName] : this._defaultSharedElements);
-      return sharedElts;
+      return this._getAttributeCaseInsensitive(propertyName + propertyNameSuffix) || this._getAttributeCaseInsensitive(propertyName) || this._defaultSharedElements;
     },
 
     _getPageValue: function(page) {
@@ -217,11 +221,11 @@
       }
 
       if (this.parentElement.selected !== undefined && this.parentElement.selected !== null && this.parentElement.selected.toString() === thisPageValue) {
-        this._wasPageSelected = true;
+        this._setSelectedPage(true);
         eventToFire = 'entry-animation-start';
         transitionPageValue = this._getPageValue(this.parentElement.selectedItem);
-      } else if (this._wasPageSelected) {
-        this._wasPageSelected = false;
+      } else if (this.selectedPage) {
+        this._setSelectedPage(false);
         eventToFire = 'exit-animation-start';
         transitionPageValue = this.parentElement.selected;
         transitionPageValue = (transitionPageValue !== undefined && transitionPageValue !== null) ? transitionPageValue.toString() : transitionPageValue;
@@ -229,17 +233,17 @@
 
       if (transitionPageValue) {
         this.animationConfig = this._getAnimationConfigForPage(transitionPageValue);
-        this.sharedElements = this._getSharedElementsForPage(transitionPageValue, this._wasPageSelected);
+        this.sharedElements = this._getSharedElementsForPage(transitionPageValue, this.selectedPage);
       }
 
       if (eventToFire) {
         this._fireNeonPageEvent(eventToFire,
-          this._wasPageSelected ? transitionPageValue : thisPageValue,
-          this._wasPageSelected ? this.parentElement.selectedItem : this,
-          this._wasPageSelected ? thisPageValue : transitionPageValue,
-          this._wasPageSelected ? this : transitionPageValue ? this.parentElement._valueToItem(transitionPageValue) : undefined);
+          this.selectedPage ? transitionPageValue : thisPageValue,
+          this.selectedPage ? this.parentElement.selectedItem : this,
+          this.selectedPage ? thisPageValue : transitionPageValue,
+          this.selectedPage ? this : transitionPageValue ? this.parentElement._valueToItem(transitionPageValue) : undefined);
       }
-      return this._wasPageSelected;
+      return this.selectedPage;
     },
 
     _neonAnimationFinished: function(event) {
@@ -268,10 +272,19 @@
 
     _normalizePageValue: function(value) {
       if (value) {
-        var normalized = value.replace(/[^.0-9a-z_$]+/gi, '');
-        return (normalized ? normalized.charAt(0).toUpperCase() + normalized.slice(1) : '');
+        return value.replace(/[^.0-9a-z_$]+/gi, '');
       }
       return '';
+    },
+
+    _getAttributeCaseInsensitive: function(attributeName) {
+      var attr = (attributeName + '').toLowerCase();
+      for (var a in this) {
+        if (this.hasOwnProperty(a) && attr == (a + '').toLowerCase()) {
+          return this[a];
+        }
+      }
+      return undefined;
     }
   }];
 </script>
