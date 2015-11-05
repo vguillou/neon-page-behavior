@@ -1,6 +1,6 @@
 {
   "name": "neon-page-behavior",
-  "version": "1.0.1",
+  "version": "1.0.5",
   "authors": [
     "Vincent Guillou <vin.guillou@gmail.com>"
   ],
@@ -8,7 +8,7 @@
   "keywords": [
     "polymer", "neon-animated-pages", "neon-animation", "lifecycle", "behavior", "web-components", "web-component", "web components", "web component"
   ],
-  "main": "activable-mixin.html",
+  "main": "neon-page-behavior.html",
   "license": "MIT",
   "ignore": [
     "**/.*",
