@@ -1,4 +1,5 @@
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-meta/iron-meta.html">
 
 <script>
   /**
@@ -119,8 +120,9 @@
     },
 
     attached: function() {
+      this._meta = new Polymer.IronMeta({type: 'neon-page-behavior'});
       if (this.parentElement.localName === 'neon-animated-pages') {
-        this.parentElement.addEventListener('selected-changed', this._pageChanged.bind(this));
+        this.parentElement.addEventListener('iron-select', this._pageChanged.bind(this));
         this.parentElement.addEventListener('neon-animation-finish', this._neonAnimationFinished.bind(this));
 
         // Fire events for the very first page shown
@@ -133,7 +135,7 @@
 
     detached: function() {
       if (this.parentElement.localName === 'neon-animated-pages') {
-        this.parentElement.removeEventListener('selected-changed', this._pageChanged);
+        this.parentElement.removeEventListener('iron-select', this._pageChanged);
         this.parentElement.removeEventListener('neon-animation-finish', this._neonAnimationFinished);
       }
     },
@@ -207,43 +209,50 @@
           value = this.parentElement.indexOf(page);
         }
       }
-      return value !== undefined && value !== null ? value.toString() : value;
+      return this._getSafeValue(value);
     },
 
-    _pageChanged: function() {
-      var eventToFire, transitionPageValue;
-      var thisPageValue = this._getPageValue(this);
+    _getSafeValue: function(selected) {
+       return (selected !== undefined && selected !== null) ? selected.toString() : selected;
+    },
 
-      if (!this._neonPageBehaviorInitialized) {
-        this._defaultAnimationConfig = this.animationConfig;
-        this._defaultSharedElements = this.sharedElements;
-        this._neonPageBehaviorInitialized = true;
-      }
+    _pageChanged: function(event) {
+      if (event && event.srcElement === this.parentElement) {
+        var eventToFire, transitionPageValue = null;
+        var thisPageValue = this._getPageValue(this);
+        var lastPageValue = this._meta.byKey('neon-page-behavior-last-selected');
 
-      if (this.parentElement.selected !== undefined && this.parentElement.selected !== null && this.parentElement.selected.toString() === thisPageValue) {
-        this._setSelectedPage(true);
-        eventToFire = 'entry-animation-start';
-        transitionPageValue = this._getPageValue(this.parentElement.selectedItem);
-      } else if (this.selectedPage) {
-        this._setSelectedPage(false);
-        eventToFire = 'exit-animation-start';
-        transitionPageValue = this.parentElement.selected;
-        transitionPageValue = (transitionPageValue !== undefined && transitionPageValue !== null) ? transitionPageValue.toString() : transitionPageValue;
-      }
+        if (!this._neonPageBehaviorInitialized) {
+          this._defaultAnimationConfig = this.animationConfig;
+          this._defaultSharedElements = this.sharedElements;
+          this._neonPageBehaviorInitialized = true;
+        }
 
-      if (transitionPageValue) {
-        this.animationConfig = this._getAnimationConfigForPage(transitionPageValue);
-        this.sharedElements = this._getSharedElementsForPage(transitionPageValue, this.selectedPage);
-      }
+        if (this.parentElement.selected !== undefined && this.parentElement.selected !== null && this.parentElement.selected.toString() === thisPageValue) {
+          this._setSelectedPage(true);
+          eventToFire = 'entry-animation-start';
+          transitionPageValue = lastPageValue;
+          this._meta = new Polymer.IronMeta({type: 'neon-page-behavior', key: 'neon-page-behavior-last-selected', value: thisPageValue});
+        } else if (this.selectedPage) {
+          this._setSelectedPage(false);
+          eventToFire = 'exit-animation-start';
+          transitionPageValue = this._getSafeValue(this.parentElement.selected);
+        }
 
-      if (eventToFire) {
-        this._fireNeonPageEvent(eventToFire,
-          this.selectedPage ? transitionPageValue : thisPageValue,
-          this.selectedPage ? this.parentElement.selectedItem : this,
-          this.selectedPage ? thisPageValue : transitionPageValue,
-          this.selectedPage ? this : transitionPageValue ? this.parentElement._valueToItem(transitionPageValue) : undefined);
+        if (transitionPageValue || typeof transitionPageValue === 'undefined') {
+          this.animationConfig = this._getAnimationConfigForPage(transitionPageValue);
+          this.sharedElements = this._getSharedElementsForPage(transitionPageValue, this.selectedPage);
+        }
+
+        if (eventToFire) {
+          this._fireNeonPageEvent(eventToFire,
+            this.selectedPage ? transitionPageValue : thisPageValue,
+            this.selectedPage ? this.parentElement.selectedItem : this,
+            this.selectedPage ? thisPageValue : transitionPageValue,
+            this.selectedPage ? this : transitionPageValue ? this.parentElement._valueToItem(transitionPageValue) : undefined);
+        }
+        return this.selectedPage;
       }
-      return this.selectedPage;
     },
 
     _neonAnimationFinished: function(event) {
