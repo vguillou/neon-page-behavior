@@ -1,45 +1,46 @@
 <!doctype html>
 <html>
 <head>
-	<title>neon-page-behavior lifecycle demo</title>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-	<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
-	<meta name="theme-color" content="#7986cb">
-	
-	<script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
-	
-	<!-- Html imports -->
-	<link rel="import" href="../../../neon-animation/neon-animated-pages.html">
-	<link rel="import" href="../../../neon-animation/neon-animations.html">
-	<link rel="import" href="../../../paper-styles/paper-styles.html">
-	<link rel="import" href="demo-element.html">
-	
-	<style>
-		body {
-			font-family: Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
-			margin: 0;
-		}
+    <title>neon-page-behavior lifecycle demo</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+    <meta name="theme-color" content="#7986cb">
+    
+    <script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
+    
+    <!-- Html imports -->
+    <link rel="import" href="../../../neon-animation/neon-animated-pages.html">
+    <link rel="import" href="../../../neon-animation/neon-animations.html">
+    <link rel="import" href="../../../neon-animation/neon-animatable.html">
+    <link rel="import" href="../../../paper-styles/paper-styles.html">
+    <link rel="import" href="demo-element.html">
+    
+    <style>
+        body {
+            font-family: Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            margin: 0;
+        }
   </style>
 
   <style is="custom-style">
-		neon-animated-pages {
-			position: absolute;
-			top: 0;
-			right: 220px;
-			bottom: 0;
-			left: 0;
-			overflow: hidden;
-		}
+        neon-animated-pages {
+            position: absolute;
+            top: 0;
+            right: 220px;
+            bottom: 0;
+            left: 0;
+            overflow: hidden;
+        }
 
-		demo-element {
+        demo-element {
       color: white;
       @apply(--layout-vertical);
       @apply(--layout-center-center);
       @apply(--paper-font-display2);
     }
 
-		demo-element.red {
+        demo-element.red {
       background: var(--paper-red-500);
     }
     #logger > p.red {
@@ -59,40 +60,40 @@
     #logger > p.blue {
       color: var(--paper-blue-500);
     }
-		
-		#logger {
-			position: absolute;
-			top: 0;
-			right: 0;
-			bottom: 0;
-			padding: 10px;
-			width: 200px;
-			overflow: scroll;
+        
+        #logger {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            padding: 10px;
+            width: 200px;
+            overflow: scroll;
       font-size: 0.8em;
-		}
-	</style>
+        }
+    </style>
 
 </head>
 <body class="fullbleed">
 
 <template is="dom-bind">
-	<neon-animated-pages class="flex" selected="{{selected}}" on-click="changePage" animate-initial-selection="true" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
-		<demo-element title="Page 0" class="red"></demo-element>
-		<demo-element title="Page 1" class="green"></demo-element>
-		<demo-element title="Page 2" class="blue"></demo-element>
-	</neon-animated-pages>
-	
-	<div id="logger">
-		<h3>Lifecycle log :</h3>
-	</div>
+    <neon-animated-pages class="flex" selected="{{selected}}" on-click="changePage" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
+        <demo-element title="Page 0" class="red"></demo-element>
+        <demo-element title="Page 1" class="green"></demo-element>
+        <demo-element title="Page 2" class="blue"></demo-element>
+    </neon-animated-pages>
+    
+    <div id="logger">
+        <h3>Lifecycle log :</h3>
+    </div>
 </template>
 
 <script>
-	var scope = document.querySelector('template[is="dom-bind"]');
+  var scope = document.querySelector('template[is="dom-bind"]');
 
   scope.changePage = function() {
     var p = document.querySelector('neon-animated-pages');
-		p.selected = (p.selected === 2) ? 0 : (Number(p.selected) + 1);
+        p.selected = (p.selected === 2) ? 0 : (Number(p.selected) + 1);
   };
 
   scope.selected = 0;
