@@ -6,10 +6,20 @@
   ],
   "description": "Make the most of Polymer's 'neon-animated-pages' effortlessly. NeonPageBehavior fires events allowing more control over a page's lifecycle, and allows your page element to use a different animation-configuration when transitioning to each different page.",
   "keywords": [
-    "polymer", "neon-animated-pages", "neon-animation", "lifecycle", "behavior", "web-components", "web-component", "web components", "web component"
+    "web-components",
+    "web-component",
+    "web components",
+    "web component",
+    "polymer",
+    "behavior",
+    "neon-animated-pages",
+    "neon-animation",
+    "page",
+    "lifecycle"
   ],
   "main": "neon-page-behavior.html",
   "license": "MIT",
+  "homepage": "https://github.com/vguillou/neon-page-behavior",
   "ignore": [
     "**/.*",
     "node_modules",
@@ -22,18 +32,20 @@
     "url": "git://github.com/vguillou/neon-page-behavior.git"
   },
   "dependencies": {
-	  "polymer": "Polymer/polymer#^1.0"
+	  "polymer": "Polymer/polymer#^1.2.3",
+    "iron-meta": "polymerelements/iron-meta#^1.1.1"
   },
   "devDependencies": {
-    "iron-component-page": "polymerelements/iron-component-page#^1.0",
-    "neon-animation": "PolymerElements/neon-animation#^1.0",
-    "paper-styles": "PolymerElements/paper-styles#^1.0",
-    "more-routing": "PolymerLabs/more-routing#^1.0",
-    "paper-drawer-panel": "PolymerElements/paper-drawer-panel#^1.0",
-    "paper-header-panel": "PolymerElements/paper-header-panel#^1.0",
-    "paper-toolbar": "PolymerElements/paper-toolbar#^1.0",
-    "paper-menu": "PolymerElements/paper-menu#^1.0",
-    "paper-item": "PolymerElements/paper-item#^1.0",
-    "paper-icon-button": "PolymerElements/paper-icon-button#^1.0"
+    "iron-component-page": "polymerelements/iron-component-page#^1.0.9",
+    "more-routing": "vguillou/more-routing#master",
+    "neon-animation": "PolymerElements/neon-animation#^1.0.8",
+    "paper-drawer-panel": "PolymerElements/paper-drawer-panel#^1.0.4",
+    "paper-header-panel": "PolymerElements/paper-header-panel#^1.0.5",
+    "paper-icon-button": "PolymerElements/paper-icon-button#^1.0.5",
+    "paper-item": "PolymerElements/paper-item#^1.0.7",
+    "paper-menu": "PolymerElements/paper-menu#^1.1.1",
+    "paper-toolbar": "PolymerElements/paper-toolbar#^1.0.4",
+    "paper-styles": "PolymerElements/paper-styles#^1.0.12",
+    "web-component-tester": "*"
   }
 }
