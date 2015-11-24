@@ -124,12 +124,6 @@
       if (this.parentElement.localName === 'neon-animated-pages') {
         this.parentElement.addEventListener('iron-select', this._pageChanged.bind(this));
         this.parentElement.addEventListener('neon-animation-finish', this._neonAnimationFinished.bind(this));
-
-        // Fire events for the very first page shown
-        if (this._pageChanged() && !this.parentElement.animateInitialSelection) {
-          var thisPageValue = this._getPageValue(this);
-          this._fireNeonPageEvent('entry-animation-finish', undefined, undefined, thisPageValue, this);
-        }
       }
     },
 
@@ -217,7 +211,7 @@
     },
 
     _pageChanged: function(event) {
-      if (event && event.srcElement === this.parentElement) {
+      if (event && event.target === this.parentElement) {
         var eventToFire, transitionPageValue = null;
         var thisPageValue = this._getPageValue(this);
         var lastPageValue = this._meta.byKey('neon-page-behavior-last-selected');
@@ -233,6 +227,10 @@
           eventToFire = 'entry-animation-start';
           transitionPageValue = lastPageValue;
           this._meta = new Polymer.IronMeta({type: 'neon-page-behavior', key: 'neon-page-behavior-last-selected', value: thisPageValue});
+          // Fire events for the very first page shown when animateInitialSelection is not set
+          if (!lastPageValue && !this.parentElement.animateInitialSelection) {
+            this._fireNeonPageEvent('entry-animation-finish', undefined, undefined, thisPageValue, this);
+          }
         } else if (this.selectedPage) {
           this._setSelectedPage(false);
           eventToFire = 'exit-animation-start';
@@ -251,7 +249,6 @@
             this.selectedPage ? thisPageValue : transitionPageValue,
             this.selectedPage ? this : transitionPageValue ? this.parentElement._valueToItem(transitionPageValue) : undefined);
         }
-        return this.selectedPage;
       }
     },
 
