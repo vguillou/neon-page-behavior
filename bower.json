@@ -1,6 +1,6 @@
 {
   "name": "neon-page-behavior",
-  "version": "1.0.5",
+  "version": "1.1.1",
   "authors": [
     "Vincent Guillou <vin.guillou@gmail.com>"
   ],
@@ -37,7 +37,6 @@
   },
   "devDependencies": {
     "iron-component-page": "polymerelements/iron-component-page#^1.0.9",
-    "more-routing": "vguillou/more-routing#master",
     "neon-animation": "PolymerElements/neon-animation#^1.0.8",
     "paper-drawer-panel": "PolymerElements/paper-drawer-panel#^1.0.4",
     "paper-header-panel": "PolymerElements/paper-header-panel#^1.0.5",
@@ -45,7 +44,6 @@
     "paper-item": "PolymerElements/paper-item#^1.0.7",
     "paper-menu": "PolymerElements/paper-menu#^1.1.1",
     "paper-toolbar": "PolymerElements/paper-toolbar#^1.0.4",
-    "paper-styles": "PolymerElements/paper-styles#^1.0.12",
-    "web-component-tester": "*"
+    "paper-styles": "PolymerElements/paper-styles#^1.0.12"
   }
 }
