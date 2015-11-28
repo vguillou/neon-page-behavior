@@ -116,11 +116,11 @@
       _neonPageBehaviorInitialized: {
         type: Boolean,
         value: false
-      },
+      }
     },
 
     attached: function() {
-      this._meta = new Polymer.IronMeta({type: 'neon-page-behavior'});
+      this._meta = new Polymer.IronMeta();
       if (this.parentElement.localName === 'neon-animated-pages') {
         this.parentElement.addEventListener('iron-select', this._pageChanged.bind(this));
         this.parentElement.addEventListener('neon-animation-finish', this._neonAnimationFinished.bind(this));
@@ -226,7 +226,8 @@
           this._setSelectedPage(true);
           eventToFire = 'entry-animation-start';
           transitionPageValue = lastPageValue;
-          this._meta = new Polymer.IronMeta({type: 'neon-page-behavior', key: 'neon-page-behavior-last-selected', value: thisPageValue});
+          new Polymer.IronMeta({key: 'neon-page-behavior-last-selected', value: thisPageValue});
+          
           // Fire events for the very first page shown when animateInitialSelection is not set
           if (!lastPageValue && !this.parentElement.animateInitialSelection) {
             this._fireNeonPageEvent('entry-animation-finish', undefined, undefined, thisPageValue, this);
