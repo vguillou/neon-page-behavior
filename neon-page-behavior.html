@@ -246,7 +246,7 @@
         if (eventToFire) {
           this._fireNeonPageEvent(eventToFire,
             this.selectedPage ? transitionPageValue : thisPageValue,
-            this.selectedPage ? this.parentElement.selectedItem : this,
+            this.selectedPage ? transitionPageValue ? this.parentElement._valueToItem(transitionPageValue) : undefined : this,
             this.selectedPage ? thisPageValue : transitionPageValue,
             this.selectedPage ? this : transitionPageValue ? this.parentElement._valueToItem(transitionPageValue) : undefined);
         }
