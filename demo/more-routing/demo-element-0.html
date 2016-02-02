@@ -6,42 +6,42 @@
 
 <!-- Element with the neon-page-behavior -->
 <dom-module id="demo-element-0">
-  <style is="custom-style">
-    :host {
-      display: block;
-      @apply(--layout-horizontal);
-      @apply(--layout-center-center);
-    }
+<style is="custom-style">
+  :host {
+    display: block;
+    @apply(--layout-horizontal);
+    @apply(--layout-center-center);
+  }
 
-    .circle {
-      border-radius: 50%;
-      margin: 5px;
-      width: 45vmin;
-      height: 45vmin;
-      line-height: 45vmin;
-      background: green;
-      text-align: center;
-    }
-  </style>
-  <template>
-    <div id="circle1" class="circle">
-      <span>Page</span>
-    </div>
-    <div id="circle2" class="circle">
-      <span>0</span>
-    </div>
-  </template>
-  <script>
-    Polymer({
+  .circle {
+    border-radius: 50%;
+    margin: 5px;
+    width: 45vmin;
+    height: 45vmin;
+    line-height: 45vmin;
+    background: green;
+    text-align: center;
+  }
+</style>
+<template>
+  <div id="circle1" class="circle">
+    <span>Page</span>
+  </div>
+  <div id="circle2" class="circle">
+    <span>0</span>
+  </div>
+</template>
+<script>
+  Polymer({
 
-      is: 'demo-element-0',
+    is: 'demo-element-0',
 
-      behaviors: [
-        Polymer.NeonSharedElementAnimatableBehavior,
-        Polymer.NeonPageBehavior
-      ],
+    behaviors: [
+    Polymer.NeonSharedElementAnimatableBehavior,
+    Polymer.NeonPageBehavior
+    ],
 
-      properties: {
+    properties: {
         // Default animation config : slide up when entering, left and right when exiting
         animationConfig: {
           type: Object,
@@ -133,4 +133,4 @@
       }
     });
   </script>
-</polymer-element>
+</dom-module>

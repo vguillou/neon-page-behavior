@@ -7,7 +7,7 @@
 	<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
 	<meta name="theme-color" content="#7986cb">
 	
-	 <script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
   
   <!-- Html imports -->
   <link rel="import" href="../../../neon-animation/neon-animated-pages.html">
@@ -24,68 +24,68 @@
   <link rel="import" href="demo-element-0.html">
   <link rel="import" href="demo-element-1.html">
   <link rel="import" href="demo-element-2.html">
-	
-	<style>
-		body {
-			font-family: Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
-			margin: 0;
-		}
-  </style>
+  
+  <style>
+    body {
+     font-family: Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+     margin: 0;
+   }
+ </style>
 
-  <style is="custom-style">
-		.page {
-      color: white;
-      @apply(--paper-font-display2);
-    }
-	</style>
+ <style is="custom-style">
+  .page {
+    color: white;
+    @apply(--paper-font-display2);
+  }
+</style>
 
 </head>
 <body class="fullbleed">
 
-<template is="dom-bind">
+  <template is="dom-bind">
 
-  <!-- Routes -->
-  <more-routing-config driver="hash"></more-routing-config>
-  <more-route name="Page-0" path="/"></more-route>
-  <more-route name="Page-1" path="/page-1"></more-route>
-  <more-route name="Page-2" path="/page-2"></more-route>
+    <!-- Routes -->
+    <more-routing-config driver="hash"></more-routing-config>
+    <more-route name="Page-0" path="/"></more-route>
+    <more-route name="Page-1" path="/page-1"></more-route>
+    <more-route name="Page-2" path="/page-2"></more-route>
 
-  <!-- Visual elements -->
-  <paper-drawer-panel id="paperDrawerPanel">
+    <!-- Visual elements -->
+    <paper-drawer-panel id="paperDrawerPanel">
 
     <paper-header-panel drawer>
 
-      <paper-toolbar>
-        <div>Demo</div>
-      </paper-toolbar>
+    <paper-toolbar>
+    <div>Demo</div>
+  </paper-toolbar>
 
-      <more-route-selector id="menuSelector">
-        <paper-menu class="list" on-iron-select="onMenuSelect">
-          <paper-item route="Page-0">Page 0</paper-item>
-          <paper-item route="Page-1">Page 1</paper-item>
-          <paper-item route="Page-2">Page 2</paper-item>
-        </paper-menu>
-      </more-route-selector>
+  <more-route-selector id="menuSelector">
+  <paper-menu class="list" on-iron-select="onMenuSelect">
+  <paper-item route="Page-0">Page 0</paper-item>
+  <paper-item route="Page-1">Page 1</paper-item>
+  <paper-item route="Page-2">Page 2</paper-item>
+</paper-menu>
+</more-route-selector>
 
-    </paper-header-panel>
+</paper-header-panel>
 
-    <paper-header-panel main>
+<paper-header-panel main>
 
-      <paper-toolbar>
-        <paper-icon-button id="paperToggle" icon="menu" paper-drawer-toggle></paper-icon-button>
-        <span class="flex">{{selected}}</span>
-      </paper-toolbar>
+<paper-toolbar>
+<paper-icon-button id="paperToggle" icon="menu" paper-drawer-toggle></paper-icon-button>
+<span class="flex">{{selected}}</span>
+</paper-toolbar>
 
-      <more-route-selector id="pageSelector">
-        <neon-animated-pages class="fit" selected="{{selected}}" attr-for-selected="route">
-          <demo-element-0 route="Page-0" class="page"></demo-element-0>
-          <demo-element-1 route="Page-1" class="page"></demo-element-1>
-          <demo-element-2 route="Page-2" class="page"></demo-element-2>
-        </neon-animated-pages>
-      </more-route-selector>
+<more-route-selector id="pageSelector">
+<neon-animated-pages class="fit" selected="{{selected}}" attr-for-selected="route">
+<demo-element-0 route="Page-0" class="page"></demo-element-0>
+<demo-element-1 route="Page-1" class="page"></demo-element-1>
+<demo-element-2 route="Page-2" class="page"></demo-element-2>
+</neon-animated-pages>
+</more-route-selector>
 
-    </paper-header-panel>
-  </paper-drawer-panel>
+</paper-header-panel>
+</paper-drawer-panel>
 </template>
 
 <script>

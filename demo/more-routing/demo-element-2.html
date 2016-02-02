@@ -6,51 +6,51 @@
 
 <!-- Element with the neon-page-behavior -->
 <dom-module id="demo-element-2">
-  <style is="custom-style">
-    :host {
-      @apply(--layout-vertical);
-      @apply(--layout-center-center);
-    }
+<style is="custom-style">
+  :host {
+    @apply(--layout-vertical);
+    @apply(--layout-center-center);
+  }
 
-    #square {
-      width: 75vmin;
-      height: 75vmin;
-      line-height: 75vmin;
-      background: blue;
-      text-align: center;
-    }
-  </style>
-  <template>
-    <div id="square">
-      <span>Page 2</span>
-    </div>
-  </template>
-  <script>
-    Polymer({
+  #square {
+    width: 75vmin;
+    height: 75vmin;
+    line-height: 75vmin;
+    background: blue;
+    text-align: center;
+  }
+</style>
+<template>
+  <div id="square">
+    <span>Page 2</span>
+  </div>
+</template>
+<script>
+  Polymer({
 
-      is: 'demo-element-2',
+    is: 'demo-element-2',
 
-      behaviors: [
-        Polymer.NeonSharedElementAnimatableBehavior,
-        Polymer.NeonPageBehavior
-      ],
+    behaviors: [
+    Polymer.NeonSharedElementAnimatableBehavior,
+    Polymer.NeonPageBehavior
+    ],
 
-      properties: {
-        animationConfig: {
-          type: Object,
-          value: function() {
-            return {
-              'entry': [ {
-                name: 'slide-down-animation',
-                node: this.$.square
-              }],
-              'exit': [{
-                name: 'slide-up-animation',
-                node: this.$.square
-              }]
-            };
-          }
-        },
+    properties: {
+      animationConfig: {
+        type: Object,
+        value: function() {
+          return {
+            'entry': [ {
+              name: 'slide-down-animation',
+              node: this.$.square
+            }],
+            'exit': [{
+              name: 'slide-up-animation',
+              node: this.$.square
+            }]
+          };
+        }
+      },
 
         // Specific animation config for Page 1: hero animation when entering from or exiting to Page 1
         animationConfigPage1: {
@@ -103,4 +103,4 @@
       }
     });
   </script>
-</polymer-element>
+</dom-module>

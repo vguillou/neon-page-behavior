@@ -1,47 +1,54 @@
 <!-- Html imports -->
 <link rel="import" href="../../../polymer/polymer.html">
 <link rel="import" href="../../../neon-animation/neon-shared-element-animatable-behavior.html">
+<link rel="import" href="../../../neon-animation/animations/transform-animation.html">
+<link rel="import" href="../../../neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="../../../neon-animation/animations/slide-left-animation.html">
+<link rel="import" href="../../../neon-animation/animations/slide-right-animation.html">
+<link rel="import" href="../../../neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="../../../neon-animation/animations/scale-down-animation.html">
+<link rel="import" href="../../../neon-animation/animations/hero-animation.html">
+<link rel="import" href="../../../iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../neon-page-behavior.html">
-<link rel="import" href="../../../paper-styles/paper-styles.html">
 
 <!-- Element with the neon-page-behavior -->
 <dom-module id="demo-element-0">
-  <style is="custom-style">
-    :host {
-      display: block;
-      @apply(--layout-horizontal);
-      @apply(--layout-center-center);
-    }
+<style is="custom-style">
+  :host {
+    display: block;
+    @apply(--layout-horizontal);
+    @apply(--layout-center-center);
+  }
 
-    .circle {
-      border-radius: 50%;
-      margin: 5px;
-      width: 45vmin;
-      height: 45vmin;
-      line-height: 45vmin;
-      background: green;
-      text-align: center;
-    }
-  </style>
-  <template>
-    <div id="circle1" class="circle">
-      <span>Page</span>
-    </div>
-    <div id="circle2" class="circle">
-      <span>0</span>
-    </div>
-  </template>
-  <script>
-    Polymer({
+  .circle {
+    border-radius: 50%;
+    margin: 5px;
+    width: 45vmin;
+    height: 45vmin;
+    line-height: 45vmin;
+    background: green;
+    text-align: center;
+  }
+</style>
+<template>
+  <div id="circle1" class="circle">
+    <span>Page</span>
+  </div>
+  <div id="circle2" class="circle">
+    <span>0</span>
+  </div>
+</template>
+<script>
+  Polymer({
 
-      is: 'demo-element-0',
+    is: 'demo-element-0',
 
-      behaviors: [
-        Polymer.NeonSharedElementAnimatableBehavior,
-        Polymer.NeonPageBehavior
-      ],
+    behaviors: [
+    Polymer.NeonSharedElementAnimatableBehavior,
+    Polymer.NeonPageBehavior
+    ],
 
-      properties: {
+    properties: {
         // Default animation config : slide up when entering, left and right when exiting
         animationConfig: {
           type: Object,
@@ -59,6 +66,10 @@
               {
                 name: 'slide-right-animation',
                 node: this.$.circle2
+              },
+              {
+                name: 'fade-out-animation',
+                node: this
               }]
             };
           }
@@ -113,4 +124,4 @@
       }
     });
   </script>
-</polymer-element>
+</dom-module>

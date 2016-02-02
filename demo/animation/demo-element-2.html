@@ -1,56 +1,70 @@
 <!-- Html imports -->
 <link rel="import" href="../../../polymer/polymer.html">
 <link rel="import" href="../../../neon-animation/neon-shared-element-animatable-behavior.html">
+<link rel="import" href="../../../neon-animation/animations/transform-animation.html">
+<link rel="import" href="../../../neon-animation/animations/fade-in-animation.html">
+<link rel="import" href="../../../neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="../../../neon-animation/animations/slide-up-animation.html">
+<link rel="import" href="../../../neon-animation/animations/hero-animation.html">
+<link rel="import" href="../../../iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../neon-page-behavior.html">
-<link rel="import" href="../../../paper-styles/paper-styles.html">
 
 <!-- Element with the neon-page-behavior -->
 <dom-module id="demo-element-2">
-  <style is="custom-style">
-    :host {
-      @apply(--layout-vertical);
-      @apply(--layout-center-center);
-    }
+<style is="custom-style">
+  :host {
+    @apply(--layout-vertical);
+    @apply(--layout-center-center);
+  }
 
-    #square {
-      width: 75vmin;
-      height: 75vmin;
-      line-height: 75vmin;
-      background: blue;
-      text-align: center;
-    }
-  </style>
-  <template>
-    <div id="square">
-      <span>Page 2</span>
-    </div>
-  </template>
-  <script>
-    Polymer({
+  #square {
+    width: 75vmin;
+    height: 75vmin;
+    line-height: 75vmin;
+    background: blue;
+    text-align: center;
+  }
+</style>
+<template>
+  <div id="square">
+    <span>Page 2</span>
+  </div>
+</template>
+<script>
+  Polymer({
 
-      is: 'demo-element-2',
+    is: 'demo-element-2',
 
-      behaviors: [
-        Polymer.NeonSharedElementAnimatableBehavior,
-        Polymer.NeonPageBehavior
-      ],
+    behaviors: [
+    Polymer.NeonSharedElementAnimatableBehavior,
+    Polymer.NeonPageBehavior
+    ],
 
-      properties: {
-        animationConfig: {
-          type: Object,
-          value: function() {
-            return {
-              'entry': [ {
-                name: 'slide-down-animation',
-                node: this.$.square
-              }],
-              'exit': [{
-                name: 'slide-up-animation',
-                node: this.$.square
-              }]
-            };
-          }
-        },
+    properties: {
+      animationConfig: {
+        type: Object,
+        value: function() {
+          return {
+            'entry': [{
+              name: 'transform-animation',
+              transformFrom: 'translateY(100%)',
+              node: this.$.square
+            },
+            {
+              name: 'fade-in-animation',
+              node: this.$.square
+            }],
+            'exit': [{
+              name: 'slide-up-animation',
+              node: this.$.square
+            },
+            {
+              name: 'fade-out-animation',
+              node: this.$.square
+            }]
+          };
+        }
+      },
 
         // Specific animation config for Page 1: hero animation when entering from or exiting to Page 1
         animationConfigPage1: {
@@ -83,4 +97,4 @@
       }
     });
   </script>
-</polymer-element>
+</dom-module>

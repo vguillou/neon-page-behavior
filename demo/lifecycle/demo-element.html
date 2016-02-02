@@ -5,57 +5,57 @@
 
 <!-- Element with the neon-page-behavior -->
 <dom-module id="demo-element">
-	<template>
-		<div>{{title}}</div>
-		<div id="loggingDiv" style="font-size: 16px;"></div>
-	</template>
-	<script>
-		Polymer({
+<template>
+  <div>{{title}}</div>
+  <div id="loggingDiv" style="font-size: 16px;"></div>
+</template>
+<script>
+  Polymer({
 
-    	is: 'demo-element',
+    is: 'demo-element',
 
-    	behaviors: [
-    	  Polymer.NeonAnimatableBehavior,
-    	  Polymer.NeonPageBehavior
-    	],
+    behaviors: [
+    Polymer.NeonAnimatableBehavior,
+    Polymer.NeonPageBehavior
+    ],
 
-			properties: {
-				title: {
-	        type: String
-	      }
-			},
+    properties: {
+      title: {
+        type: String
+      }
+    },
 
-			listeners: {
-	      'entry-animation-start': 'onEntryStart',
-	      'entry-animation-finish': 'onEntryFinish',
-	      'exit-animation-start': 'onExitStart',
-	      'exit-animation-finish': 'onExitFinish'
-	    },
+    listeners: {
+      'entry-animation-start': 'onEntryStart',
+      'entry-animation-finish': 'onEntryFinish',
+      'exit-animation-start': 'onExitStart',
+      'exit-animation-finish': 'onExitFinish'
+    },
 
-			onEntryStart: function(e) {
-				while (this.$.loggingDiv.firstChild) {
-   			 this.$.loggingDiv.removeChild(this.$.loggingDiv.firstChild);
-				}
-				this.addLog(this.title + ' entry animation starts from page "' + e.detail.from + '"');
-			},
-			onEntryFinish: function(e) {
-				this.addLog(this.title + ' entry animation finished from page "' + e.detail.from + '"');
-			},
-			onExitStart: function(e) {
-				this.addLog(this.title + ' exit animation starts to page "' + e.detail.to + '"');
-			},
-			onExitFinish: function(e) {
-				this.addLog(this.title + ' exit animation finished to page "' + e.detail.to + '"');
-			},
-			addLog: function(msg) {
-				this.message = msg;
-				var p = document.createElement("P");
-				var t = document.createTextNode(msg);
-				p.appendChild(t);
-				p.className += this.classList[0];
-				document.querySelector('#logger').appendChild(p);
-				this.$.loggingDiv.appendChild(p.cloneNode(true));
-			}
-		});
-	</script>
-</polymer-element>
+    onEntryStart: function(e) {
+      while (this.$.loggingDiv.firstChild) {
+        this.$.loggingDiv.removeChild(this.$.loggingDiv.firstChild);
+      }
+      this.addLog(this.title + ' entry animation starts from page "' + e.detail.from + '"');
+    },
+    onEntryFinish: function(e) {
+      this.addLog(this.title + ' entry animation finished from page "' + e.detail.from + '"');
+    },
+    onExitStart: function(e) {
+      this.addLog(this.title + ' exit animation starts to page "' + e.detail.to + '"');
+    },
+    onExitFinish: function(e) {
+      this.addLog(this.title + ' exit animation finished to page "' + e.detail.to + '"');
+    },
+    addLog: function(msg) {
+      this.message = msg;
+      var p = document.createElement("P");
+      var t = document.createTextNode(msg);
+      p.appendChild(t);
+      p.className += this.classList[0];
+      document.querySelector('#logger').appendChild(p);
+      this.$.loggingDiv.appendChild(p.cloneNode(true));
+    }
+  });
+</script>
+</dom-module>
