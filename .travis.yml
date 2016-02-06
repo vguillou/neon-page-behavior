@@ -4,19 +4,23 @@ addons:
   firefox: latest
   apt:
     sources:
-      - google-chrome
-      - ubuntu-toolchain-r-test
+    - google-chrome
+    - ubuntu-toolchain-r-test
     packages:
-      - google-chrome-stable
-      - g++-4.8
+    - google-chrome-stable
+    - g++-4.8
 node_js: stable
 env:
   global:
-    - CXX=g++-4.8
-    - DISPLAY=99.0
+  - CXX=g++-4.8
+  - DISPLAY=99.0
+  - secure: s8Ii2wniygVZlqpFWh/cnvPOMmgVagbBiFI+Gf8xbM8Xnk1se2xjSBrpmKQ+rMhNsgn/3rzyEWyEgpkHjiINLfinG/aRPsdIMSmAXpVqiklm2fVE/T6mXotm+Fi9pB+jcvIqoi/TnvJDO9NCHUibGBnDI49Sk0hiTQrJFao9HC2wDKVO7m/JAlJx9zlfvQIvIMkRWd3g8vzDeEI3LfzKcS1J65RjOiljIEwP6gBtNPpagl+3vKV5fGPGovMDaB+XJIngOt6h9ApcPhKocU0gnkPE3BaAy75euovkrxnrMxchxZ5OirJEKUogkvFsEMArfVSdmiRi2ts/7DMDUhgQyHkJkXUC9eEYfnXMnMBkPqVFrdXrSoKqm/7D1J2b+mHXWuNGyZlpY110jXye4TP0FCL1SQu+3dO5AL1U6XONZN5J0/t7pVq6VCNLeevgETXJla5saAjC40DhM0zOP44T8B4byrW5gjImyqUXvUbgWSpePTzjY179qJb1P7DxthNMg4cUjwW3UJDuWrQkD09Sc1PZXsXXdOHfpACcDfRmwkqaT5Dg7V6sEITbHWMdplAgeJmWPxhY0T5zJ+oaKgqHy7bN2fBsIMRKCdBE0tvLBQy6qfW2c0Nb+42JierfqKyjYLsY4ySa9UszTCqj0WeuxjI0Q+0t0Ib1gRqKeEy29n0=
+  - secure: ICQ9tZTa0L/5HPmPXqawRacuNJ27C5WRh6tZAOGqkFk8pE3jTQK6jyelCxhAFAC2acE1sAwTY8bWntK75GN3KcRInOkTaQbpO7elxClhnhB57orFp1ytvASd6EC59XxDpsh5/AESnOwgJZxymhU4NQME4Cw+MI7lSC0xuz6/ZvrbVQpB8NdULo7tliOzbQZvr/4On1Zg/pkIZBhoZbClccGG3SJ50K5dAY60a0Qzl5DbobtkpFDH113hj/rF2qv2+j4KqGY9ZutqV0jZqJJ1OVjX1DSSpzhA1wOTYRu90QAYW04M5KNzznQsNdjxknk6Cm08118MdGuM3ikA7Vkr9cF59xhFxqJfC83NspYqgle5hjoH+0kUHELhsqZsQEAeuCgrDXBzcYoBJzFcGtGfCwg1saAVSno65eH16Un5/GkBeZ7S9Rwgh8YJMV6lsF3jmUY5UrtCXKkAbkLi7HJElmbXnVavcD5pDJcy4KKVIbOLAfgV3RZwV/cwnH39DOHsOIYH4EM8hmDJdx1qqQF74qZNTtdIUICeSvjF9N7cm1+jKTrL4FAbbv2IBQhfS2T2l/KoINOergpjQUj2MDE++rwEOpLd0Z5V5J4egZl3oZpCABKQ8qSCc1bsqqEHgxaRube4Mez1ADit4qB/ewWqbpRIwqIeL7E6TgLYZypcJ80=
 before_script:
-  - npm install -g bower polylint web-component-tester
-  - bower install
-  - polylint
+- npm install -g bower polylint web-component-tester
+- export PATH=$PWD/node_modules/.bin:$PATH
+- bower install
+- polylint
 script:
-  - xvfb-run wct
+- xvfb-run wct --skip-plugin sauce
+- if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then wct --skip-plugin local; fi
