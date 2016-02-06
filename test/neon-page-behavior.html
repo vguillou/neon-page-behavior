@@ -14,15 +14,22 @@
   <link rel="import" href="../demo/animation/demo-element-1.html">
   <link rel="import" href="../demo/animation/demo-element-2.html">
 
+  <style>
+    neon-animated-pages,
+    neon-animated-pages > * {
+      height: 500px;
+      width: 500px;
+    }
+  </style>
 </head>
 <body>
 
   <test-fixture id="basic">
     <template>
-      <neon-animated-pages attr-for-selected="name" style="height:500px; width500px;">
-        <demo-element-0 name="page0" style="height:500px; width500px;"></demo-element-0>
-        <demo-element-1 name="page1" style="height:500px; width500px;"></demo-element-1>
-        <demo-element-2 name="page2" style="height:500px; width500px;"></demo-element-2>
+      <neon-animated-pages attr-for-selected="name">
+        <demo-element-0 name="page0"></demo-element-0>
+        <demo-element-1 name="page1"></demo-element-1>
+        <demo-element-2 name="page2"></demo-element-2>
       </neon-animated-pages>
     </template>
   </test-fixture>
@@ -140,41 +147,31 @@ suite('<neon-page-behavior>', function() {
       var entryFinishEventFired = false;
       var exitStartEventFired = false;
       var exitFinishEventFired = false;
-      page1.addEventListener('exit-animation-start', function(e) {
-        exitStartEventFired = true;
-        failIfEventsInWrongOrder(exitFinishEventFired, 'exit');
-        checkEvent(e, page1.animationConfig, page1.sharedElements, 'page1', page1, 'page2', page2);
-      });
-      page1.addEventListener('exit-animation-finish', function(e) {
-        exitFinishEventFired = true;
-        checkEvent(e, page1.animationConfig, page1.sharedElements, 'page1', page1, 'page2', page2);
-      });
-      page2.addEventListener('entry-animation-start', function(e) {
-        entryStartEventFired = true;
-        failIfEventsInWrongOrder(entryFinishEventFired, 'entry');
-        checkEvent(e, page2.animationConfigPage1, page2.sharedElementsPage1, 'page1', page1, 'page2', page2);
-      });
-      page2.addEventListener('entry-animation-finish', function(e) {
-        entryFinishEventFired = true;
-        checkEvent(e, page2.animationConfigPage1, page2.sharedElementsPage1, 'page1', page1, 'page2', page2);
-      });
 
       // Launching step1 after a delay to let the 'setup' select to initial page
       Polymer.Base.async(function() {
-        animatedPages.selected = 'page2';
-        // First page change checking after a delay, once the animation is over
-        Polymer.Base.async(function() {
-          checkFiredEvents(exitStartEventFired, 'exit-animation-start', exitFinishEventFired, 'exit-animation-finish', '');
-          checkFiredEvents(entryStartEventFired, 'entry-animation-start', entryFinishEventFired, 'entry-animation-finish', '');
-          step2();
-        }, TIMEOUT);
-      }, TIMEOUT);
 
-      var step2 = function() {
-        var entryStartEventFired = false;
-        var entryFinishEventFired = false;
-        var exitStartEventFired = false;
-        var exitFinishEventFired = false;
+        // Step 1 events: page1 (setup) => page2
+        page1.addEventListener('exit-animation-start', function(e) {
+          exitStartEventFired = true;
+          failIfEventsInWrongOrder(exitFinishEventFired, 'exit');
+          checkEvent(e, page1.animationConfig, page1.sharedElements, 'page1', page1, 'page2', page2);
+        });
+        page1.addEventListener('exit-animation-finish', function(e) {
+          exitFinishEventFired = true;
+          checkEvent(e, page1.animationConfig, page1.sharedElements, 'page1', page1, 'page2', page2);
+        });
+        page2.addEventListener('entry-animation-start', function(e) {
+          entryStartEventFired = true;
+          failIfEventsInWrongOrder(entryFinishEventFired, 'entry');
+          checkEvent(e, page2.animationConfigPage1, page2.sharedElementsPage1, 'page1', page1, 'page2', page2);
+        });
+        page2.addEventListener('entry-animation-finish', function(e) {
+          entryFinishEventFired = true;
+          checkEvent(e, page2.animationConfigPage1, page2.sharedElementsPage1, 'page1', page1, 'page2', page2);
+        });
+
+        // Step 2 events: page2 => page0
         page2.addEventListener('exit-animation-start', function(e) {
           exitStartEventFired = true;
           failIfEventsInWrongOrder(exitFinishEventFired, 'exit');
@@ -194,21 +191,7 @@ suite('<neon-page-behavior>', function() {
           checkEvent(e, page0.animationConfig, page0.sharedElements, 'page2', page2, 'page0', page0);
         });
 
-        // Launching step2
-        animatedPages.selected = 'page0';
-        // Second page change checking after a delay, once the animation is over
-        Polymer.Base.async(function() {
-          checkFiredEvents(exitStartEventFired, 'exit-animation-start', exitFinishEventFired, 'exit-animation-finish', 'at step2.');
-          checkFiredEvents(entryStartEventFired, 'entry-animation-start', entryFinishEventFired, 'entry-animation-finish', 'at step2.');
-          step3();
-        }, TIMEOUT);
-      };
-
-      var step3 = function() {
-        var entryStartEventFired = false;
-        var entryFinishEventFired = false;
-        var exitStartEventFired = false;
-        var exitFinishEventFired = false;
+        // Step 3 events: page0 => page1
         page0.addEventListener('exit-animation-start', function(e) {
           exitStartEventFired = true;
           failIfEventsInWrongOrder(exitFinishEventFired, 'exit');
@@ -227,6 +210,37 @@ suite('<neon-page-behavior>', function() {
           entryFinishEventFired = true;
           checkEvent(e, page1.animationConfig, page1.sharedElements, 'page0', page0, 'page1', page1);
         });
+        
+        animatedPages.selected = 'page2';
+        // First page change checking after a delay, once the animation is over
+        Polymer.Base.async(function() {
+          checkFiredEvents(exitStartEventFired, 'exit-animation-start', exitFinishEventFired, 'exit-animation-finish', '');
+          checkFiredEvents(entryStartEventFired, 'entry-animation-start', entryFinishEventFired, 'entry-animation-finish', '');
+          step2();
+        }, TIMEOUT);
+      }, TIMEOUT);
+
+      var step2 = function() {
+        entryStartEventFired = false;
+        entryFinishEventFired = false;
+        exitStartEventFired = false;
+        exitFinishEventFired = false;
+
+        // Launching step2
+        animatedPages.selected = 'page0';
+        // Second page change checking after a delay, once the animation is over
+        Polymer.Base.async(function() {
+          checkFiredEvents(exitStartEventFired, 'exit-animation-start', exitFinishEventFired, 'exit-animation-finish', 'at step2.');
+          checkFiredEvents(entryStartEventFired, 'entry-animation-start', entryFinishEventFired, 'entry-animation-finish', 'at step2.');
+          step3();
+        }, TIMEOUT);
+      };
+
+      var step3 = function() {
+        entryStartEventFired = false;
+        entryFinishEventFired = false;
+        exitStartEventFired = false;
+        exitFinishEventFired = false;
 
         // Launching step3
         animatedPages.selected = 'page1';
