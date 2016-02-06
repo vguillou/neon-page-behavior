@@ -56,13 +56,13 @@
 
   <template is="dom-bind">
     <neon-animated-pages attr-for-selected="name" selected="{{selected}}">
-    <demo-element-0 name="page0" class="page"></demo-element-0>
-    <demo-element-1 name="page1" class="page"></demo-element-1>
-    <demo-element-2 name="page2" class="page"></demo-element-2>
-  </neon-animated-pages>
-  <button type="button" id="previous" on-click="previousPage">&lt;&lt; Previous Page</button>
-  <button type="button" id="next" on-click="nextPage">Next Page &gt;&gt;</button>
-</template>
+      <demo-element-0 name="page0" class="page"></demo-element-0>
+      <demo-element-1 name="page1" class="page"></demo-element-1>
+      <demo-element-2 name="page2" class="page"></demo-element-2>
+    </neon-animated-pages>
+    <button type="button" id="previous" on-click="previousPage">&lt;&lt; Previous Page</button>
+    <button type="button" id="next" on-click="nextPage">Next Page &gt;&gt;</button>
+  </template>
 
 <script>
   var scope = document.querySelector('template[is="dom-bind"]');

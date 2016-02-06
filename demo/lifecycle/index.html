@@ -79,15 +79,15 @@
 
   <template is="dom-bind">
     <neon-animated-pages selected="{{selected}}" on-click="changePage" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
-    <demo-element title="Page 0" class="red"></demo-element>
-    <demo-element title="Page 1" class="green"></demo-element>
-    <demo-element title="Page 2" class="blue"></demo-element>
-  </neon-animated-pages>
+      <demo-element title="Page 0" class="red"></demo-element>
+      <demo-element title="Page 1" class="green"></demo-element>
+      <demo-element title="Page 2" class="blue"></demo-element>
+    </neon-animated-pages>
 
-  <div id="logger">
-    <h3>Lifecycle log :</h3>
-  </div>
-</template>
+    <div id="logger">
+      <h3>Lifecycle log :</h3>
+    </div>
+  </template>
 
 <script>
   var scope = document.querySelector('template[is="dom-bind"]');
