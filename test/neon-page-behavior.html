@@ -1,0 +1,277 @@
+<!doctype html>
+<html>
+<head>
+
+  <title>neon-page-behavior</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+
+  <link rel="import" href="../../neon-animation/neon-animated-pages.html">
+  <link rel="import" href="../demo/animation/demo-element-0.html">
+  <link rel="import" href="../demo/animation/demo-element-1.html">
+  <link rel="import" href="../demo/animation/demo-element-2.html">
+
+</head>
+<body>
+
+  <test-fixture id="basic">
+    <template>
+      <neon-animated-pages attr-for-selected="name" style="height:500px; width500px;">
+        <demo-element-0 name="page0" style="height:500px; width500px;"></demo-element-0>
+        <demo-element-1 name="page1" style="height:500px; width500px;"></demo-element-1>
+        <demo-element-2 name="page2" style="height:500px; width500px;"></demo-element-2>
+      </neon-animated-pages>
+    </template>
+  </test-fixture>
+
+<script>
+suite('<neon-page-behavior>', function() {
+
+  // Master timeout: time in ms given to the animations to finish
+  var TIMEOUT = 800;
+
+  suite('initialisation', function() {
+    var animatedPages;
+    var pages;
+    var page0, page1, page2;
+
+    setup(function() {
+      animatedPages = fixture('basic');
+      pages = Polymer.dom(animatedPages).children;
+      page0 = pages[0];
+      page1 = pages[1];
+      page2 = pages[2];
+    });
+
+    test('first entry events', function(done) {
+      var entryStartEventFired = false;
+      var entryFinishEventFired = false;
+      page1.addEventListener('entry-animation-start', function(e) {
+        entryStartEventFired = true;
+        failIfEventsInWrongOrder(entryFinishEventFired, 'entry');
+        checkEvent(e, page1.animationConfig, page1.sharedElements, undefined, undefined, 'page1', page1);
+      });
+      page1.addEventListener('entry-animation-finish', function(e) {
+        entryFinishEventFired = true;
+        checkEvent(e, page1.animationConfig, page1.sharedElements, undefined, undefined, 'page1', page1);
+      });
+
+      // Launching test
+      animatedPages.selected = 'page1';
+      // Final checking after a delay, once the animation is over
+      Polymer.Base.async(function() {
+        checkFiredEvents(entryStartEventFired, 'entry-animation-start', entryFinishEventFired, 'entry-animation-finish', '');
+        done();
+      }, TIMEOUT);
+    });
+  });
+
+  suite('lifecycle and animation configs', function() {
+    var animatedPages;
+    var pages;
+    var page0, page1, page2;
+
+    setup(function() {
+      animatedPages = fixture('basic');
+      pages = Polymer.dom(animatedPages).children;
+      page0 = pages[0];
+      page1 = pages[1];
+      page2 = pages[2];
+      animatedPages.selected = 'page1';
+    });
+
+    teardown(function() {
+      animatedPages.selected = undefined;
+    });
+
+    test('entry events', function(done) {
+      var entryStartEventFired = false;
+      var entryFinishEventFired = false;
+      page0.addEventListener('entry-animation-start', function(e) {
+        entryStartEventFired = true;
+        failIfEventsInWrongOrder(entryFinishEventFired, 'entry');
+        checkEvent(e, page0.animationConfigPage1, page0.sharedElementsPage1Entry, 'page1', page1, 'page0', page0);
+      });
+      page0.addEventListener('entry-animation-finish', function(e) {
+        entryFinishEventFired = true;
+        checkEvent(e, page0.animationConfigPage1, page0.sharedElementsPage1Entry, 'page1', page1, 'page0', page0);
+      });
+
+      // Launching test after a delay to let the 'setup' select to initial page
+      Polymer.Base.async(function() {
+        animatedPages.selected = 'page0';
+        // Final checking after a delay, once the animation is over
+        Polymer.Base.async(function() {
+          checkFiredEvents(entryStartEventFired, 'entry-animation-start', entryFinishEventFired, 'entry-animation-finish', '');
+          done();
+        }, TIMEOUT);
+      }, TIMEOUT);
+    });
+
+    test('exit events', function(done) {
+      var exitStartEventFired = false;
+      var exitFinishEventFired = false;
+      page1.addEventListener('exit-animation-start', function(e) {
+        exitStartEventFired = true;
+        failIfEventsInWrongOrder(exitFinishEventFired, 'exit');
+        checkEvent(e, page1.animationConfig, page1.sharedElements, 'page1', page1, 'page0', page0);
+      });
+      page1.addEventListener('exit-animation-finish', function(e) {
+        exitFinishEventFired = true;
+        checkEvent(e, page1.animationConfig, page1.sharedElements, 'page1', page1, 'page0', page0);
+      });
+
+      // Launching test after a delay to let the 'setup' select to initial page
+      Polymer.Base.async(function() {
+        animatedPages.selected = 'page0';
+        // Final checking after a delay, once the animation is over
+        Polymer.Base.async(function() {
+          checkFiredEvents(exitStartEventFired, 'exit-animation-start', exitFinishEventFired, 'exit-animation-finish', '');
+          done();
+        }, TIMEOUT);
+      }, TIMEOUT);
+    });
+
+    test('change page thrice', function(done) {
+      var entryStartEventFired = false;
+      var entryFinishEventFired = false;
+      var exitStartEventFired = false;
+      var exitFinishEventFired = false;
+      page1.addEventListener('exit-animation-start', function(e) {
+        exitStartEventFired = true;
+        failIfEventsInWrongOrder(exitFinishEventFired, 'exit');
+        checkEvent(e, page1.animationConfig, page1.sharedElements, 'page1', page1, 'page2', page2);
+      });
+      page1.addEventListener('exit-animation-finish', function(e) {
+        exitFinishEventFired = true;
+        checkEvent(e, page1.animationConfig, page1.sharedElements, 'page1', page1, 'page2', page2);
+      });
+      page2.addEventListener('entry-animation-start', function(e) {
+        entryStartEventFired = true;
+        failIfEventsInWrongOrder(entryFinishEventFired, 'entry');
+        checkEvent(e, page2.animationConfigPage1, page2.sharedElementsPage1, 'page1', page1, 'page2', page2);
+      });
+      page2.addEventListener('entry-animation-finish', function(e) {
+        entryFinishEventFired = true;
+        checkEvent(e, page2.animationConfigPage1, page2.sharedElementsPage1, 'page1', page1, 'page2', page2);
+      });
+
+      // Launching step1 after a delay to let the 'setup' select to initial page
+      Polymer.Base.async(function() {
+        animatedPages.selected = 'page2';
+        // First page change checking after a delay, once the animation is over
+        Polymer.Base.async(function() {
+          checkFiredEvents(exitStartEventFired, 'exit-animation-start', exitFinishEventFired, 'exit-animation-finish', '');
+          checkFiredEvents(entryStartEventFired, 'entry-animation-start', entryFinishEventFired, 'entry-animation-finish', '');
+          step2();
+        }, TIMEOUT);
+      }, TIMEOUT);
+
+      var step2 = function() {
+        var entryStartEventFired = false;
+        var entryFinishEventFired = false;
+        var exitStartEventFired = false;
+        var exitFinishEventFired = false;
+        page2.addEventListener('exit-animation-start', function(e) {
+          exitStartEventFired = true;
+          failIfEventsInWrongOrder(exitFinishEventFired, 'exit');
+          checkEvent(e, page2.animationConfig, page2.sharedElements, 'page2', page2, 'page0', page0);
+        });
+        page2.addEventListener('exit-animation-finish', function(e) {
+          exitFinishEventFired = true;
+          checkEvent(e, page2.animationConfig, page2.sharedElements, 'page2', page2, 'page0', page0);
+        });
+        page0.addEventListener('entry-animation-start', function(e) {
+          entryStartEventFired = true;
+          failIfEventsInWrongOrder(entryFinishEventFired, 'entry');
+          checkEvent(e, page0.animationConfig, page0.sharedElements, 'page2', page2, 'page0', page0);
+        });
+        page0.addEventListener('entry-animation-finish', function(e) {
+          entryFinishEventFired = true;
+          checkEvent(e, page0.animationConfig, page0.sharedElements, 'page2', page2, 'page0', page0);
+        });
+
+        // Launching step2
+        animatedPages.selected = 'page0';
+        // Second page change checking after a delay, once the animation is over
+        Polymer.Base.async(function() {
+          checkFiredEvents(exitStartEventFired, 'exit-animation-start', exitFinishEventFired, 'exit-animation-finish', 'at step2.');
+          checkFiredEvents(entryStartEventFired, 'entry-animation-start', entryFinishEventFired, 'entry-animation-finish', 'at step2.');
+          step3();
+        }, TIMEOUT);
+      };
+
+      var step3 = function() {
+        var entryStartEventFired = false;
+        var entryFinishEventFired = false;
+        var exitStartEventFired = false;
+        var exitFinishEventFired = false;
+        page0.addEventListener('exit-animation-start', function(e) {
+          exitStartEventFired = true;
+          failIfEventsInWrongOrder(exitFinishEventFired, 'exit');
+          checkEvent(e, page0.animationConfigPage1, page0.sharedElementsPage1Exit, 'page0', page0, 'page1', page1);
+        });
+        page0.addEventListener('exit-animation-finish', function(e) {
+          exitFinishEventFired = true;
+          checkEvent(e, page0.animationConfigPage1, page0.sharedElementsPage1Exit, 'page0', page0, 'page1', page1);
+        });
+        page1.addEventListener('entry-animation-start', function(e) {
+          entryStartEventFired = true;
+          failIfEventsInWrongOrder(entryFinishEventFired, 'entry');
+          checkEvent(e, page1.animationConfig, page1.sharedElements, 'page0', page0, 'page1', page1);
+        });
+        page1.addEventListener('entry-animation-finish', function(e) {
+          entryFinishEventFired = true;
+          checkEvent(e, page1.animationConfig, page1.sharedElements, 'page0', page0, 'page1', page1);
+        });
+
+        // Launching step3
+        animatedPages.selected = 'page1';
+        // Third and last page change checking after a delay, once the animation is over
+        Polymer.Base.async(function() {
+          checkFiredEvents(exitStartEventFired, 'exit-animation-start', exitFinishEventFired, 'exit-animation-finish', 'at step3.');
+          checkFiredEvents(entryStartEventFired, 'entry-animation-start', entryFinishEventFired, 'entry-animation-finish', 'at step3.');
+          done();
+        }, TIMEOUT);
+      };
+    });
+
+  });
+  
+  // Check a neon-behavior-event
+  var checkEvent = function(event, animationConfig, sharedElements, from, fromPage, to, toPage) {
+    expect(event).to.not.be.an('undefined');
+    expect(event).to.not.be.a('null');
+    expect(event.detail).to.not.be.an('undefined');
+    expect(event.detail).to.not.be.a('null');
+    expect(event.detail.animationConfig).to.be.equal(animationConfig);
+    expect(event.detail.sharedElements).to.be.equal(sharedElements);
+    expect(event.detail.from).to.be.equal(from);
+    expect(event.detail.fromPage).to.be.equal(fromPage);
+    expect(event.detail.to).to.be.equal(to);
+    expect(event.detail.toPage).to.be.equal(toPage);
+  };
+
+  // Check that event1 and event2 were fired (flag1 and flag2 respectively) 
+  var checkFiredEvents = function(flag1, event1, flag2, event2, msg) {
+    if (!flag1 && !flag2)
+      assert.fail(undefined, event1 + ' and ' + event2, 'no event fired (' + event1 + ' and ' + event2 + ') ' + msg);
+    if (!flag1)
+      assert.fail(undefined, event1, event1 + ' not fired ' + msg);
+    else if (!flag2)
+      assert.fail(undefined, event2, event2 + ' not fired ' + msg);
+  };
+
+  // Fail if shouldFail = true, telling that the events were fired in the wrong order
+  var failIfEventsInWrongOrder = function(shouldFail, eventKind) {
+    if (shouldFail)
+      assert.fail(eventKind + '-animation-finish', eventKind + '-animation-start', eventKind + '-animation-finish fired before ' + eventKind + '-animation-start');
+  };
+});
+</script>
+
+</body>
+</html>
