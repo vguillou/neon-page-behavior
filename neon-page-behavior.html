@@ -122,15 +122,17 @@
     attached: function() {
       this._meta = new Polymer.IronMeta();
       if (this.parentElement.localName === 'neon-animated-pages') {
-        this.parentElement.addEventListener('iron-select', this._pageChanged.bind(this));
-        this.parentElement.addEventListener('neon-animation-finish', this._neonAnimationFinished.bind(this));
+        this._boundIronSelectHandler = this._pageChanged.bind(this);
+        this._boundNeonAnimationFinishedHandler = this._neonAnimationFinished.bind(this);
+        this.parentElement.addEventListener('iron-select', this._boundIronSelectHandler);
+        this.parentElement.addEventListener('neon-animation-finish', this._boundNeonAnimationFinishedHandler);
       }
     },
 
     detached: function() {
       if (this.parentElement.localName === 'neon-animated-pages') {
-        this.parentElement.removeEventListener('iron-select', this._pageChanged);
-        this.parentElement.removeEventListener('neon-animation-finish', this._neonAnimationFinished);
+        this.parentElement.removeEventListener('iron-select', this._boundIronSelectHandler);
+        this.parentElement.removeEventListener('neon-animation-finish', this._boundNeonAnimationFinishedHandler);
       }
     },
 
