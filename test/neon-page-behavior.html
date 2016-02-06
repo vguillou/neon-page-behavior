@@ -253,6 +253,43 @@ suite('<neon-page-behavior>', function() {
       };
     });
 
+    test('selectedPage flag', function(done) {
+      // Launching test after a delay to let the 'setup' select to initial page
+      Polymer.Base.async(function() {
+        expect(page0.selectedPage).to.be.equal(false);
+        expect(page1.selectedPage).to.be.equal(true);
+        expect(page2.selectedPage).to.be.equal(false);
+
+        animatedPages.selected = 'page2';
+
+        // Check the new selectedPage once the animation is over
+        Polymer.Base.async(function() {
+          expect(page0.selectedPage).to.be.equal(false);
+          expect(page1.selectedPage).to.be.equal(false);
+          expect(page2.selectedPage).to.be.equal(true);
+
+          animatedPages.selected = 'page0';
+
+          // Check the new selectedPage once the animation is over
+          Polymer.Base.async(function() {
+            expect(page0.selectedPage).to.be.equal(true);
+            expect(page1.selectedPage).to.be.equal(false);
+            expect(page2.selectedPage).to.be.equal(false);
+
+            animatedPages.selected = 'page1';
+
+            // Final check
+            Polymer.Base.async(function() {
+              expect(page0.selectedPage).to.be.equal(false);
+              expect(page1.selectedPage).to.be.equal(true);
+              expect(page2.selectedPage).to.be.equal(false);
+              done();
+            }, TIMEOUT);
+          }, TIMEOUT);
+        }, TIMEOUT);
+      }, TIMEOUT);
+    });
+
   });
   
   // Check a neon-behavior-event
