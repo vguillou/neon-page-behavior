@@ -1,5 +1,8 @@
 # neon-page-behavior
 
+[![Build Status](https://travis-ci.org/vguillou/neon-page-behavior.svg?branch=master)](https://travis-ci.org/vguillou/neon-page-behavior)
+[![GitHub version](https://badge.fury.io/gh/vguillou%2Fneon-page-behavior.svg)](https://badge.fury.io/gh/vguillou%2Fneon-page-behavior)
+
 _Make the most of Polymer's [`<neon-animated-pages>`](https://github.com/PolymerElements/neon-animation#page-transitions) effortlessly. NeonPageBehavior fires events allowing more control over a page's lifecycle, and allows your page element to use a different animation-configuration when transitioning to each different page._
 
 Please refer to the <a href="https://vguillou.github.io/webcomponents/neon-page-behavior/">component page</a> for more informations.
@@ -240,10 +243,7 @@ _my-neon-page.html_
 
 ## TODOs
 
-1. Let the dev configure externally which "animationConfig" object should be used for the transitions to each page, instead of directly fetching the "animationConfig[NextPage]" or "animationConfig[PreviousPage]" property of the neon-page
-2. Improve documentation
-3. ...
-4. Profit
+- Improve documentation
 
 ## License
 
