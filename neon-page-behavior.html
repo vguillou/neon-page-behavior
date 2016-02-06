@@ -228,9 +228,12 @@
           transitionPageValue = lastPageValue;
           new Polymer.IronMeta({key: 'neon-page-behavior-last-selected', value: thisPageValue});
           
-          // Fire events for the very first page shown when animateInitialSelection is not set
+          // Fire events for the very first page shown when animateInitialSelection is not set.
+          // We use async to ensure that the 'start' event is fired before the 'finish' one.
           if (!lastPageValue && !this.parentElement.animateInitialSelection) {
-            this._fireNeonPageEvent('entry-animation-finish', undefined, undefined, thisPageValue, this);
+            this.async(function() {
+              this._fireNeonPageEvent('entry-animation-finish', undefined, undefined, thisPageValue, this);
+            }, 1);
           }
         } else if (this.selectedPage) {
           this._setSelectedPage(false);
