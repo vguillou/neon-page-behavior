@@ -241,8 +241,9 @@ _my-neon-page.html_
 
 [Here](https://vguillou.github.io/webcomponents/neon-page-behavior/demo/index.html)
 
-## TODOs
+## TODOs for v1.2.0
 
+- Add an `overlay` property allowing a page to be displayed on top of the previous one
 - Improve documentation
 
 ## License
