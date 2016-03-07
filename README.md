@@ -248,4 +248,4 @@ _my-neon-page.html_
 
 ## License
 
-[MIT License](http://opensource.org/licenses/MIT)
+[MIT License](https://github.com/vguillou/neon-page-behavior/blob/master/LICENSE.md)
