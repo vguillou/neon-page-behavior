@@ -1,0 +1,137 @@
+<!-- Html imports -->
+<link rel="import" href="../../../polymer/polymer.html">
+<link rel="import" href="../../../neon-animation/neon-shared-element-animatable-behavior.html">
+
+<link rel="import" href="../../../neon-animation/animations/fade-in-animation.html">
+<link rel="import" href="../../../neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="../../../neon-animation/animations/slide-right-animation.html">
+<link rel="import" href="../../../neon-animation/animations/slide-from-right-animation.html">
+
+<link rel="import" href="../../../paper-button/paper-button.html">
+<link rel="import" href="../../../paper-material/paper-material.html">
+<link rel="import" href="../../../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../neon-page-behavior.html">
+
+<!-- Element with the neon-page-behavior -->
+<dom-module id="overlay-page-2">
+<style is="custom-style">
+  :host {
+    @apply(--layout-vertical);
+    @apply(--layout-center);
+    @apply(--layout-center-justified);
+  }
+
+  #fixed {
+    position: fixed;
+    @apply(--layout-fit);
+    background-color: rgba(0, 0, 0, 0.66);
+  }
+
+  paper-material {
+    @apply(--layout-vertical);
+    @apply(--layout-center-center);
+    font-size: 12px;
+    background-color: white;
+    border-radius: 2px;
+    padding: 16px;
+    margin: auto 32px;
+  }
+
+  #buttonContainer {
+    @apply(--layout-horizontal);
+    @apply(--layout-justified);
+    margin-top: 12px;
+  }
+</style>
+<template>
+  
+  <div id="fixed" on-tap="onTapBack"></div>
+
+  <paper-material id="card" elevation="1">
+    <h2>Second overlay page</h2>
+    <div id="buttonContainer">
+      <paper-button on-tap="onTapBack">Back to previous page ([[_previousPage]])</paper-button>
+      <paper-button on-tap="onTapOverlay1">Go to Overlay 1</paper-button>
+      <paper-button on-tap="onTapNormal1">Go to Page 1</paper-button>
+      <paper-button on-tap="onTapNormal2">Go to Page 2</paper-button>
+    </div>
+  </paper-material>
+
+</template>
+<script>
+  Polymer({
+
+    is: 'overlay-page-2',
+
+    behaviors: [
+      Polymer.NeonSharedElementAnimatableBehavior,
+      Polymer.NeonPageBehavior
+    ],
+
+    listeners: {
+      'entry-animation-start': 'onEntryStart'
+    },
+
+    properties: {
+
+      animationConfig: {
+        type: Object,
+        value: function() {
+          return {
+            'entry': {
+              name: 'fade-in-animation',
+              node: this
+            },
+            'exit': {
+              name: 'fade-out-animation',
+              node: this
+            }
+          };
+        }
+      },
+
+      animationConfigOverlayPage1: {
+        type: Object,
+        value: function() {
+          return {
+            'entry': [{
+                name: 'slide-from-right-animation',
+                node: this.$.card
+            }, {
+              name: 'fade-in-animation',
+              node: this
+            }],
+            'exit': [{
+                name: 'slide-right-animation',
+                node: this.$.card
+            }, {
+              name: 'fade-out-animation',
+              node: this
+            }]
+          };
+        }
+      }
+    },
+
+    onEntryStart: function(e) {
+      this._previousPage = e.detail.from;
+    },
+
+    onTapBack: function(e) {
+      // Fire event to trigger the page transition by the parent component (index.html)
+      // with the ID of said page
+      this.fire('go-to', this._previousPage);
+    },
+
+    onTapOverlay1: function(e) {
+      this.fire('go-to', 'overlayPage1');
+    },
+    onTapNormal1: function(e) {
+      this.fire('go-to', 'normalPage1');
+    },
+    onTapNormal2: function(e) {
+      this.fire('go-to', 'normalPage2');
+    }
+  });
+  </script>
+</dom-module>

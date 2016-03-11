@@ -1,0 +1,180 @@
+<!-- Html imports -->
+<link rel="import" href="../../../polymer/polymer.html">
+<link rel="import" href="../../../neon-animation/neon-shared-element-animatable-behavior.html">
+
+<link rel="import" href="../../../neon-animation/animations/fade-in-animation.html">
+<link rel="import" href="../../../neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="../../../neon-animation/animations/hero-animation.html">
+<link rel="import" href="../../../neon-animation/animations/slide-left-animation.html">
+<link rel="import" href="../../../neon-animation/animations/slide-from-left-animation.html">
+
+<link rel="import" href="../../../paper-button/paper-button.html">
+<link rel="import" href="../../../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../neon-page-behavior.html">
+<link rel="import" href="../common/sample-card.html">
+
+<!-- Element with the neon-page-behavior -->
+<dom-module id="overlay-page-1">
+<style is="custom-style">
+  :host {
+    @apply(--layout-vertical);
+    @apply(--layout-center);
+    @apply(--layout-center-justified);
+  }
+
+  #fixed {
+    position: fixed;
+    @apply(--layout-fit);
+    background-color: rgba(0, 0, 0, 0.66);
+  }
+
+  sample-card {
+    margin: auto 32px;
+  }
+
+  #buttonContainer {
+    @apply(--layout-horizontal);
+    @apply(--layout-justified);
+    margin-top: 12px;
+  }
+</style>
+<template>
+
+  <div id="fixed" on-tap="onTapBack"></div>
+
+  <sample-card id="card" model="{{model}}">
+    <div id="buttonContainer">
+      <paper-button on-tap="onTapBack">Back to previous page ([[_previousPage]])</paper-button>
+      <paper-button on-tap="onTapOverlay2">Go to Overlay 2</paper-button>
+      <paper-button on-tap="onTapNormal1">Go to Page 1</paper-button>
+      <paper-button on-tap="onTapNormal2">Go to Page 2</paper-button>
+    </div>
+  </sample-card>
+
+</template>
+<script>
+  Polymer({
+
+    is: 'overlay-page-1',
+
+    behaviors: [
+      Polymer.NeonSharedElementAnimatableBehavior,
+      Polymer.NeonPageBehavior
+    ],
+
+    listeners: {
+      'entry-animation-start': 'onEntryStart'
+    },
+
+    properties: {
+
+      model: {
+        type: Object
+      },
+
+      animationConfig: {
+        type: Object,
+        value: function() {
+          return {
+            'entry': {
+              name: 'fade-in-animation',
+              node: this
+            },
+            'exit': {
+              name: 'fade-out-animation',
+              node: this
+            }
+          };
+        }
+      },
+
+      animationConfigNormalPage1: {
+        type: Object,
+        value: function() {
+          return {
+            'entry': [{
+                name: 'fade-in-animation',
+                node: this.$.fixed
+              }, {
+                name: 'fade-in-animation',
+                node: this.$.buttonContainer
+              }, {
+                name: 'hero-animation',
+                id: 'hero',
+                toPage: this,
+                timing: {
+                  delay: 100
+                }
+            }],
+            'exit': [{
+                name: 'fade-out-animation',
+                node: this.$.fixed
+              }, {
+                name: 'fade-out-animation',
+                node: this.$.buttonContainer
+              }, {
+                name: 'hero-animation',
+                id: 'hero',
+                fromPage: this,
+                timing: {
+                  delay: 100
+                }
+            }]
+          };
+        }
+      },
+
+      sharedElementsNormalPage1: {
+        type: Object,
+        value: function() {
+          return {
+            'hero': this.$.card
+          };
+        }
+      },
+
+      animationConfigOverlayPage2: {
+        type: Object,
+        value: function() {
+          return {
+            'entry': [{
+                name: 'slide-from-left-animation',
+                node: this.$.card
+            }, {
+              name: 'fade-in-animation',
+              node: this
+            }],
+            'exit': [{
+                name: 'slide-left-animation',
+                node: this.$.card
+            }, {
+              name: 'fade-out-animation',
+              node: this
+            }]
+          };
+        }
+      }
+    },
+
+    onEntryStart: function(e) {
+      this._previousPage = e.detail.from;
+    },
+
+    onTapBack: function(e) {
+      // Fire event to trigger the page transition by the parent component (index.html)
+      // with the ID of said page
+      this.fire('go-to', this._previousPage);
+    },
+
+    onTapOverlay2: function(e) {
+      this.fire('go-to', 'overlayPage2');
+    },
+    onTapNormal1: function(e) {
+      this.fire('go-to', 'normalPage1');
+    },
+    onTapNormal2: function(e) {
+      this.fire('go-to', 'normalPage2');
+    }
+  });
+  </script>
+</dom-module>

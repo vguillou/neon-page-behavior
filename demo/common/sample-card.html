@@ -1,0 +1,144 @@
+<link rel="import" href="../../../polymer/polymer.html">
+<link rel="import" href="../../../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../paper-material/paper-material.html">
+
+<dom-module id="sample-card">
+<style is="custom-style">
+  :host {
+    display: block;
+    margin: 8px;
+  }
+  paper-material {
+    font-size: 12px;
+    background-color: white;
+    border-radius: 2px;
+    padding: 16px;
+  }
+  header {
+    @apply(--layout-horizontal);
+    @apply(--layout-center);
+    margin-bottom: 8px;
+  }
+  .badge {
+    height: 48px;
+    min-width: 48px;
+    border-radius: 50%;
+    line-height: 48px;
+    font-size: 24px;
+    color: #fff;
+    text-align: center;
+  }
+  .title {
+    font-size: 20px;
+    padding: 8px;
+    color: #888;
+  }
+  .subtitle {
+    font-size: 16px;
+    padding-bottom: 8px;
+  }
+  p {
+    margin: 0;
+  }
+</style>
+<template>
+
+  <paper-material elevation="1">
+    <header>
+      <div class="badge" style$="[[_computeBadgeStyle(model.color)]]">[[model.symbol]]</div>
+      <div class="title">[[model.title]]</div>
+    </header>
+    <p class="subtitle">[[model.subtitle]]</p>
+    <p>[[model.line1]]</p>
+    <p>[[model.line2]]</p>
+    <content></content>
+  </paper-material>
+
+</template>
+
+<script>
+  Polymer({
+
+    is: 'sample-card',
+
+    properties: {
+      model: {
+        type: Object,
+        value: function() {
+          return {
+            title: this._randomString(),
+            subtitle: this._randomString(),
+            symbol : this._randomSymbol(),
+            color: this._randomColor(),
+            line1: this._randomString(),
+            line2: this._randomString()
+          };
+        }
+      }
+    },
+
+    get title() {
+      return this.model.title;
+    },
+
+    set title(str) {
+      this.set('model.title', str);
+    },
+
+    _computeBadgeStyle: function(color) {
+      return 'background-color: ' + color + ';';
+    },
+
+    _randomSymbol: function() {
+      var symbols = '♥☺☻✖►▧◐☼♠♣◈♫♪☆＊✿❉✭';
+      return symbols[Math.floor(Math.random() * symbols.length)];
+    },
+
+    _randomString: function() {
+      var strings = [
+        'Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.',
+        'Ut labores minimum atomorum pro. Laudem tibique ut has.',
+        'Fugit adolescens vis et, ei graeci forensibus sed.',
+        'Convenire definiebas scriptorem eu cum. Sit dolor dicunt consectetuer no.',
+        'Ea duis bonorum nec, falli paulo aliquid ei eum.',
+        'Usu eu novum principes, vel quodsi aliquip ea.',
+        'Has at minim mucius aliquam, est id tempor laoreet.',
+        'Pro saepe pertinax ei, ad pri animal labores suscipiantur.',
+        'Detracto suavitate repudiandae no eum. Id adhuc minim soluta nam.',
+        'Iisque perfecto dissentiet cum et, sit ut quot mandamus, ut vim tibique splendide instructior.',
+        'Id nam odio natum malorum, tibique copiosae expetenda mel ea.',
+        'Cu mei vide viris gloriatur, at populo eripuit sit.',
+        'Modus commodo minimum eum te, vero utinam assueverit per eu.',
+        'No nam ipsum lorem aliquip, accumsan quaerendum ei usu.'
+      ];
+      return strings[Math.floor(Math.random() * strings.length)];
+    },
+    
+    _randomColor: function() {
+      var colors = [
+        '#f44336',
+        '#f44336',
+        '#9c27b0',
+        '#673ab7',
+        '#3f51b5',
+        '#2196f3',
+        '#03a9f4',
+        '#00bcd4',
+        '#009688',
+        '#4caf50',
+        '#8bc34a',
+        '#cddc39',
+        '#ffeb3b',
+        '#ffc107',
+        '#ff9800',
+        '#ff5722',
+        '#795548',
+        '#9e9e9e',
+        '#607d8b',
+        '#000000'
+      ];
+      return colors[Math.floor(Math.random() * colors.length)];
+    }
+});
+</script>
+</dom-module>

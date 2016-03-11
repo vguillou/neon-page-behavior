@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+  <title>neon-page-behavior overlay demo</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+  <meta name="theme-color" content="#7986cb">
+  
+  <script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
+  
+  <!-- Html imports -->
+  <link rel="import" href="../../../neon-animation/neon-animated-pages.html">
+  <link rel="import" href="../../../iron-flex-layout/iron-flex-layout.html">
+  <link rel="import" href="normal-page.html">
+  <link rel="import" href="overlay-page.html">
+  
+  <style>
+    body {
+     font-family: Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+     margin: 0;
+     background-color: #333;
+   }
+  </style>
+
+  <style is="custom-style">
+    :root {
+      --primary-color: #7986cb;
+    }
+
+    neon-animated-pages {
+      @apply(--layout-fit);
+      background-color: #eee;
+      max-width: 600px;
+      margin: auto;
+    }
+  </style>
+</head>
+<body class="fullbleed">
+
+  <template is="dom-bind">
+    <neon-animated-pages attr-for-selected="name" selected="{{selected}}">
+      <normal-page name="normalPage" class="page" on-tap="goToOverlayPage"></normal-page>
+      <overlay-page name="overlayPage" class="page" on-tap="goToNormalPage" overlay-page></overlay-page>
+    </neon-animated-pages>
+  </template>
+
+<script>
+  var scope = document.querySelector('template[is="dom-bind"]');
+
+  scope.goToOverlayPage = function(event) {
+    scope.selected = 'overlayPage';
+  };
+  scope.goToNormalPage = function() {
+    scope.selected = 'normalPage';
+  };
+
+  scope.selected = 'normalPage';
+</script>
+
+</body>
+</html>

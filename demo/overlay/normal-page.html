@@ -1,0 +1,52 @@
+<!-- Html imports -->
+<link rel="import" href="../../../polymer/polymer.html">
+<link rel="import" href="../../../neon-animation/neon-animatable-behavior.html">
+
+<link rel="import" href="../../../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../paper-header-panel/paper-header-panel.html">
+<link rel="import" href="../../../paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../../neon-page-behavior.html">
+<link rel="import" href="../common/sample-card.html">
+
+<!-- Element with the neon-page-behavior -->
+<dom-module id="normal-page">
+
+<template>
+
+  <paper-header-panel class="flex">
+    <paper-toolbar>
+      <span class="title">Normal page</span>
+    </paper-toolbar>
+    <div>
+      <template is="dom-repeat" items="{{items}}">
+        <sample-card title="[[item]]"></sample-card>
+      </template>
+    </div>
+  </paper-header-panel>
+
+</template>
+<script>
+  Polymer({
+
+    is: 'normal-page',
+
+    behaviors: [
+      Polymer.NeonAnimatableBehavior,
+      Polymer.NeonPageBehavior
+    ],
+
+    properties: {
+      items: {
+        type: Array,
+        value: function() {
+          return [
+            'I\'m just a normal page',
+            'Click anywhere to navigate to the overlay page',
+            'I will remain in the background even while the overlay page is displayed'
+          ];
+        }
+      }
+    }
+  });
+  </script>
+</dom-module>

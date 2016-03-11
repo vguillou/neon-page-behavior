@@ -3,154 +3,104 @@
 [![Build Status](https://travis-ci.org/vguillou/neon-page-behavior.svg?branch=master)](https://travis-ci.org/vguillou/neon-page-behavior)
 [![GitHub version](https://badge.fury.io/gh/vguillou%2Fneon-page-behavior.svg)](https://badge.fury.io/gh/vguillou%2Fneon-page-behavior)
 
-_Make the most of Polymer's [`<neon-animated-pages>`](https://github.com/PolymerElements/neon-animation#page-transitions) effortlessly. NeonPageBehavior fires events allowing more control over a page's lifecycle, and allows your page element to use a different animation-configuration when transitioning to each different page._
+_Make the most of Polymer's [`<neon-animated-pages>`](https://github.com/PolymerElements/neon-animation#page-transitions) effortlessly. NeonPageBehavior fires events allowing more control over a page's lifecycle, allows your page element to use a different animation-configuration when transitioning to each different page, and makes it possible to display a page as an overlay on top of another._
 
-Please refer to the <a href="https://vguillou.github.io/webcomponents/neon-page-behavior/">component page</a> for more informations.
+Please refer to the <a href="https://vguillou.github.io/webcomponents/neon-page-behavior/">component page</a> for more informations, or directly take a look at the [demos](https://vguillou.github.io/webcomponents/neon-page-behavior/demo/index.html).
 
-* [Page lifecycle](#lifecycle)
+* [Why do you need NeonPageBehavior](#why)
+* [The page lifecycle](#lifecycle)
 * [Declaring different animation configurations](#animation)
   * [animationConfig](#animation_config)
   * [sharedElements](#shared_elements)
+* [Setup Overlay page](#overlay)
+
+<a name="why"></a>
+## Why do you need NeonPageBehavior ?
+[`<neon-animated-pages>`](https://github.com/PolymerElements/neon-animation#page-transitions) is great for building
+single-page application with engaging page transitions. However it currently has a few shortcomings:
+
+1. _Pages are not aware of their lifecycle_, and a good amount of boilerplate is necessary to introduce this notion:
+A page including the `NeonPageBehavior` takes care of that for you,
+and can __listen to events fired before and after both enter and exit transitions__.
+
+2. _You can only setup declaratively one transition_, no matter how many pages your application is made up of:
+Using `NeonPageBehavior`, you can __setup declaratively a different animation to transition
+to each and every page of you application__.
+
+3. _There is no built-in solution to make a page overlay another_:
+__`NeonPageBehavior` offers a solution to declaratively setup overlay pages__,
+and thus plug them into you routing solution without any extra code.
+
 
 <a name="lifecycle"></a>
-## Page lifecycle
+## The page lifecycle 
 
-Elements having the `NeonPageBehavior` and being a child of a [`<neon-animated-pages>`](https://github.com/PolymerElements/neon-animation#page-transitions) element can listen to 4 new events:
+An element being extended with the `NeonPageBehavior` (and of course being a child of a
+[`<neon-animated-pages>`](https://github.com/PolymerElements/neon-animation#page-transitions)
+element) can listen to 4 new events:
 
-* **`entry-animation-start`**:
-Called BEFORE the transition TO the element starts.
-Useful to handle initialization before your element gets visible (start loading data, animation optimisation,...).
+- `entry-animation-start`
 
-* **`entry-animation-finish`**:
-Called AFTER the transition TO the element finished.
-Useful to finish initialization of your element (allow user focus,...).
+    __Called BEFORE the transition TO the page starts__.
+    Useful to handle initialization before your page gets visible
+    (start loading data, animation optimisation,...).
+    _However it is not recommended to launch heavy processing at this
+    time not to hinder the transition's animation._
 
-* **`exit-animation-start`**:
-Called BEFORE the transition FROM the element starts.
-Useful to deal with exit tasks (disallow user focus, animation optimisation,...).
+- `entry-animation-finish`
 
-* **`exit-animation-finish`**:
-Called AFTER the transition FROM the element finished.
-Useful to handle exit tasks when your element isn't visible anymore (reset scroller position,...).
+     __Called AFTER the transition TO the page finished__.
+     Useful to finish initializing your page (allow user focus,...).
 
-The `detail` of the dispatched events contains the following properties :
+- `exit-animation-start`
 
-* **`animationConfig`**:
-The `animationConfig` of the target page for the transition.
+     __Called BEFORE the transition FROM the page starts__.
+     Useful to deal with exit tasks (disallow user focus, animation optimisation,...).
+     _However it is not recommended to launch heavy processing at this
+     time not to hinder the transition's animation._
 
-* **`sharedElements`**:
-The `sharedElements` of the target page for the transition.
+- `exit-animation-finish`
 
-* **`from`**:
-The identifier of the original page of the transition, as in `neon-animated-pages.selected`.
+     __Called AFTER the transition FROM the page finished__.
+     Useful to handle exit tasks when your page isn't visible anymore
+     (reset scroller position,...).
 
-* **`fromPage`**:
-The reference to the original page of the transition.
+The `detail` property of those dispatched events contains the following properties :
+- `animationConfig`:
+     The `animationConfig` of the page (ie `this`) for the transition.
 
-* **`to`**:
-The identifier of the destination page of the transition, as in `neon-animated-pages.selected`.
+- `sharedElements`:
+     The `sharedElements` of the page (ie `this`) for the transition.
 
-* **`toPage`**:
-The reference to the destination page of the transition.
+- `from`:
+     The identifier of the original page of the transition (ie the previously selected page),
+     as in `neon-animated-pages.selected`.
 
+- `fromPage`:
+     The reference to the original page of the transition (ie the previously selected page).
 
-### Example
+- `to`:
+     The identifier of the destination page of the transition (ie the newly selected page),
+     as in `neon-animated-pages.selected`.
+
+- `toPage`:
+     The reference to the destination page of the transition (ie the newly selected page),.
+
+#### Example
 
 _index.html_
 ```html
 <neon-animated-pages class="flex" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
-	<my-neon-page title="Page 1" style="background-color: red;"></my-neon-page>
-	<my-neon-page title="Page 2" style="background-color: blue;"></my-neon-page>
+  <my-neon-page title="Page 1" style="background-color: red;"></my-neon-page>
+  <my-neon-page title="Page 2" style="background-color: blue;"></my-neon-page>
 </neon-animated-pages>
 ```
 
 _my-neon-page.html_
-```html
-<dom-module id="my-neon-page">
-	<template>
-		<div>{{title}}</div>
-	</template>
-	<script>
-		Polymer({
-
-			is: 'my-neon-page',
-
-			behaviors: [
-			  Polymer.NeonAnimatableBehavior,
-			  Polymer.NeonPageBehavior
-			],
-
-			properties: {
-				title: {
-					type: String
-				}
-			},
-
-			listeners: {
-			  'entry-animation-start': 'onEntryStart',
-			  'entry-animation-finish': 'onEntryFinish',
-			  'exit-animation-start': 'onExitStart',
-			  'exit-animation-finish': 'onExitFinish'
-			},
-
-			onEntryStart: function(e) {
-				console.log(this.title + ' entry animation starts');
-			},
-			onEntryFinish: function(e) {
-				console.log(this.title + ' entry animation finished');
-			},
-			onExitStart: function(e) {
-				console.log(this.title + ' exit animation starts');
-			},
-			onExitFinish: function(e) {
-				console.log(this.title + ' exit animation finished');
-			}
-		});
-	</script>
-</dom-module>
-```
-
-<a name="animation"></a>
-## Declaring different animation configurations
-
-<a name="animation_config"></a>
-### animationConfig
-Elements having the `NeonPageBehavior` and being child of a [`<neon-animated-pages>`](https://github.com/PolymerElements/neon-animation#page-transitions) can also declared different `animationConfig` properties that will be used automatically for transitioning to and from each different page.
-These properties' names must respect the following naming convention:
-
-`animationConfig` + value representing the page to transition from/to for the parent `<neon-animated-pages>` (see `selected` and `attrForSelected` properties in the [`<neon-animated-pages>`](https://github.com/PolymerElements/neon-animation#page-transitions) documentation for more detail on this), all normalized to become a valid javascript variable name.
-(ie if `pageValue`='home-alone', the `animationConfigHomeAlone` property will be used if it is defined, and `animationConfig` if not).
-
-<a name="shared_elements"></a>
-### sharedElements
-If your element also have the [`NeonSharedElementAnimatableBehavior`](https://elements.polymer-project.org/elements/neon-animation?active=Polymer.NeonSharedElementAnimatableBehavior), you can similarly declare different `sharedElements` properties for each different page to transition from/to. The naming convention is the following:
-
-`sharedElements` + value representing the page to transition from/to, all normalized to become a valid javascript variable name.
-(ie if `pageValue`='home-alone', the `sharedElementsHomeAlone` property will be used if it is defined, and `sharedElements` if not).
-
-You can also differentiate the `sharedElements` for the transition FROM a given page (entering this element) from the `sharedElements` for the transition TO a given page (exiting this element) by following this naming convention:
-
-`sharedElements` + value representing the page to transition from/to + `Entry` or `Exit`, all normalized to become a valid javascript variable name.
-(ie if `pageValue`='home-alone' and entering this page from the page 'home-alone', the `sharedElementsHomeAloneEntry` property will be used if it is defined, `sharedElementsHomeAlone` otherwise and `sharedElements` if none of the 2 aforementioned properties are defined).
-
-### Example
-
-_index.html_
-```html
-<neon-animated-pages class="flex" attr-for-selected="name">
-	<my-neon-page name="Page1" style="background-color: red;"></my-neon-page>
-	<my-page-2 name="Page2" style="background-color: blue;"></my-page-2>
-	<my-page-3 name="Page3" style="background-color: green;"></my-page-3>
-	<my-page-4 name="Page4" style="background-color: yellow;"></my-page-4>
-</neon-animated-pages>
-```
-
-_my-neon-page.html_
-```html
+```js
 <dom-module id="my-neon-page">
   <template>
-    <div id="myHero1"><span>1</span></div>
-    <div id="myHero2"><span>2</span></div>
+    <div>{{title}}</div>
   </template>
   <script>
     Polymer({
@@ -158,93 +108,253 @@ _my-neon-page.html_
       is: 'my-neon-page',
 
       behaviors: [
-        Polymer.NeonSharedElementAnimatableBehavior,
+        Polymer.NeonAnimatableBehavior,
         Polymer.NeonPageBehavior
       ],
 
       properties: {
-        // Default animation config : slide up when entering, left and right when exiting
-        animationConfig: {
-          type: Object,
-          value: function() {
-            return {
-              'entry': [{
-                name: 'transform-animation',
-                transformFrom: 'translateY(100%)',
-                node: this
-              }],
-              'exit': [{
-                name: 'slide-left-animation',
-                node: this.$.myHero1
-              },
-              {
-                name: 'slide-right-animation',
-                node: this.$.myHero2
-              }]
-            };
-          }
-        },
-
-        // Specific animation config for Page2: Entering from Page2, myHero1 is a hero and myHero2 scales. The other way around when exiting to Page2
-        animationConfigPage2: {
-          type: Object,
-          value: function() {
-            return {
-              'entry': [{
-                name: 'hero-animation',
-                id: 'hero',
-                toPage: this
-              },
-              {
-                name: 'scale-up-animation',
-                node: this.$.myHero2
-              }],
-              'exit': [{
-                name: 'hero-animation',
-                id: 'hero',
-                fromPage: this
-              },
-              {
-                name: 'scale-down-animation',
-                node: this.$.myHero1
-              }]
-            };
-          }
-        },
-
-        // Shared elements when entering this page from Page2: myHero1 is the hero
-        sharedElementsPage2Entry: {
-          type: Object,
-          value: function() {
-            return {
-              'hero': this.$.myHero1
-            };
-          }
-        },
-
-        // Shared elements when exiting this page to Page2: myHero2 is the hero
-        sharedElementsPage2Exit: {
-          type: Object,
-          value: function() {
-            return {
-              'hero': this.$.myHero2
-            };
-          }
+        title: {
+          type: String
         }
+      },
+
+      listeners: {
+        'entry-animation-start': 'onEntryStart',
+        'entry-animation-finish': 'onEntryFinish',
+        'exit-animation-start': 'onExitStart',
+        'exit-animation-finish': 'onExitFinish'
+      },
+
+      onEntryStart: function(e) {
+        console.log(this.title + ' entry animation starts');
+      },
+      onEntryFinish: function(e) {
+        console.log(this.title + ' entry animation finished');
+      },
+      onExitStart: function(e) {
+        console.log(this.title + ' exit animation starts');
+      },
+      onExitFinish: function(e) {
+        console.log(this.title + ' exit animation finished');
       }
-    });
-  </script>
-</dom-module>
+
+      ...
+```
+
+<a name="animation"></a>
+## Declaring different animation configurations
+
+Chances are your SPA's will contain more than a couple of pages. 
+
+Let's consider a simple SPA with 4 pages: `page-list` displaying a list of items, `page-detail` showing more information about a selected item, and finally `page-settings-1` and `page-settings-2` that are two general preference pages that can be access from all other pages.
+
+It's very likely that you may want to implement a nice transition between `page-list` and `page-detail`, such as a hero animation, and something different for transitioning to the `page-settings-1` and `page-settings-2`.
+
+Elements having the `NeonPageBehavior` (and of course being child of a [`<neon-animated-pages>`](https://github.com/PolymerElements/neon-animation#page-transitions)) can let you do just that by supporting different `animationConfig` properties for every single page transition, in addition to the global one.
+
+#### Example
+
+_index.html_
+```html
+<neon-animated-pages attr-for-selected="name">
+  <page-list name="list"></page-list>
+  <page-detail name="detail"></page-detail>
+  <page-settings-1 name="settings1"></page-settings-1>
+  <page-settings-2 name="settings2"></page-settings-2>
+</neon-animated-pages>
+```
+
+_page-list.html_
+```js
+// Specific animation config used when transitioning to/from `page-detail`
+animationConfigDetail: {
+  type: Object,
+  value: function() {
+    return {
+      'entry': [{
+        name: 'hero-animation',
+        id: 'hero',
+        toPage: this
+      },
+      {
+        name: 'fade-in-animation',
+        node: this
+      }],
+      'exit': [{
+        name: 'hero-animation',
+        id: 'hero',
+        fromPage: this
+      },
+      {
+        name: 'fade-out-animation',
+        node: this
+      }]
+    };
+  }
+},
+
+// Shared elements when going to `page-detail`
+sharedElementsDetail: {
+  type: Object,
+  value: function() {
+    return {
+      'hero': this.$.myHero
+    };
+  }
+},
+
+// Global animation config that will be used for any other page
+// (`page-settings-1` and `page-settings-2` in our example)
+animationConfig: {
+  type: Object,
+  value: function() {
+    return {
+      'entry': {
+        name: 'slide-from-bottom-animation',
+        node: this
+      },
+      'exit': {
+        name: 'slide-down-animation',
+        node: this
+      }
+    };
+  }
+}
+```
+
+_page-detail.html_
+```js
+// Specific animation config used when transitioning to/from `page-list`
+animationConfigList: {
+  type: Object,
+  value: function() {
+    return {
+      'entry': [{
+        name: 'hero-animation',
+        id: 'hero',
+        toPage: this
+      },
+      {
+        name: 'fade-in-animation',
+        node: this
+      }],
+      'exit': [{
+        name: 'hero-animation',
+        id: 'hero',
+        fromPage: this
+      },
+      {
+        name: 'fade-out-animation',
+        node: this
+      }]
+    };
+  }
+},
+
+// Shared elements when going to `page-list`
+sharedElementsList: {
+  type: Object,
+  value: function() {
+    return {
+      'hero': this.$.myHero
+    };
+  }
+},
+
+// Global animation config that will be used for any other page
+// (`page-settings-1` and `page-settings-2` in our example)
+animationConfig: {
+  type: Object,
+  value: function() {
+    return {
+      'entry': {
+        name: 'slide-from-bottom-animation',
+        node: this
+      },
+      'exit': {
+        name: 'slide-down-animation',
+        node: this
+      }
+    };
+  }
+}
+```
+
+_page-settings-1.html_ and _page-settings-2.html_
+```js
+// Always the same transition animation for every page
+animationConfig: {
+  type: Object,
+  value: function() {
+    return {
+      'entry': {
+        name: 'fade-in-animation',
+        node: this
+      },
+      'exit': {
+        name: 'fade-out-animation',
+        node: this
+      }
+    };
+  }
+}
+```
+
+<a name="animation_config"></a>
+### animationConfig
+
+All `animationConfig` properties must respect the following naming convention:
+
+__`animationConfig` + value representing the page to transition from/to__ for the parent `<neon-animated-pages>`
+(see `selected` and `attrForSelected` properties in the
+[`<neon-animated-pages>`](https://github.com/PolymerElements/neon-animation#page-transitions)
+documentation for more detail on this), all normalized to become a valid javascript variable name.
+(ie if `pageValue`='home-alone', the `animationConfigHomeAlone` property will be used if it is defined, and `animationConfig` if not).
+
+<a name="shared_elements"></a>
+### sharedElements
+
+If your element also have the [`NeonSharedElementAnimatableBehavior`](https://elements.polymer-project.org/elements/neon-animation?active=Polymer.NeonSharedElementAnimatableBehavior), you can similarly
+declare different `sharedElements` properties for each different page to transition
+from/to. The naming convention is the following:
+
+__`sharedElements` + value representing the page to transition from/to__, all normalized to become a valid javascript variable name.
+(ie if `pageValue`='home-alone', the `sharedElementsHomeAlone` property will be used if it is defined, and `sharedElements` if not).
+
+__You can also differentiate the `sharedElements` to use for the transition FROM a given page
+and the `sharedElements` to use for the transition TO a given page__ by following this naming convention:
+
+__`sharedElements` + value representing the page to transition from/to + `Entry` or `Exit`__, all normalized to become a valid javascript variable name.
+(ie if `pageValue`='home-alone' and entering this page from the page 'home-alone', the `sharedElementsHomeAloneEntry` property will be used if it is defined, `sharedElementsHomeAlone` otherwise and `sharedElements` if none of the 2 aforementioned properties are defined).
+
+
+<a name="overlay"></a>
+## Setup Overlay page
+
+__`NeonPageBehavior` offers a solution to declaratively setup overlay pages__, simply by adding the `overlay-page` attribute to your page(s).
+This will allow the page to be displayed over the previously selected one (which will be given the `background-page` attribute).
+No styling (other than setting the `z-index` to appear on top) is done, so this remains entirely up to the developer.
+
+This feature comes with a few limitations however :
+- It is not possible to display nested overlay pages (this is a pretty bad UX practice).
+- For overlay pages to be displayed properly, __all__ children of the
+[`<neon-animated-pages>`](https://github.com/PolymerElements/neon-animation#page-transitions)
+must be including the `NeonPageBehavior`.
+- An overlay page is styled to appear on top of the others by setting its CSS `z-index` property (to `1001`). You must ensure no element in a background page has a higher `z-index`.
+
+#### Example
+
+_index.html_
+```html
+<neon-animated-pages attr-for-selected="name">
+  <normal-page name="normalPage"></normal-page>
+  <overlay-page name="overlayPage" overlay-page></overlay-page>
+</neon-animated-pages>
 ```
 
 ## Demos
 
-[Here](https://vguillou.github.io/webcomponents/neon-page-behavior/demo/index.html)
-
-## TODOs for v1.2.0
-
-- Add an `overlay` property allowing a page to be displayed on top of the previous one
-- Improve documentation
+[You can find them here.](https://vguillou.github.io/webcomponents/neon-page-behavior/demo/index.html)
 
 ## License
 

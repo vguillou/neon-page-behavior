@@ -90,10 +90,6 @@ suite('<neon-page-behavior>', function() {
       animatedPages.selected = 'page1';
     });
 
-    teardown(function() {
-      animatedPages.selected = undefined;
-    });
-
     test('entry events', function(done) {
       var entryStartEventFired = false;
       var entryFinishEventFired = false;

@@ -1,0 +1,119 @@
+<!-- Html imports -->
+<link rel="import" href="../../../polymer/polymer.html">
+<link rel="import" href="../../../neon-animation/neon-shared-element-animatable-behavior.html">
+
+<link rel="import" href="../../../neon-animation/animations/fade-in-animation.html">
+<link rel="import" href="../../../neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="../../../neon-animation/animations/hero-animation.html">
+
+<link rel="import" href="../../../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../paper-header-panel/paper-header-panel.html">
+<link rel="import" href="../../../paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../../neon-page-behavior.html">
+<link rel="import" href="../common/sample-card.html">
+
+<!-- Element with the neon-page-behavior -->
+<dom-module id="normal-page-1">
+
+<template>
+
+  <paper-header-panel class="flex">
+    <paper-toolbar>
+      <span class="title">Page 1</span>
+    </paper-toolbar>
+    <div>
+      <template is="dom-repeat" items="{{items}}">
+        <sample-card title="[[item]]" on-tap="tapHandler"></sample-card>
+      </template>
+    </div>
+  </paper-header-panel>
+
+</template>
+<script>
+  Polymer({
+
+    is: 'normal-page-1',
+
+    behaviors: [
+      Polymer.NeonSharedElementAnimatableBehavior,
+      Polymer.NeonPageBehavior
+    ],
+
+    properties: {
+      items: {
+        type: Array,
+        value: function() {
+          return [
+            'Click me to reveal the overlay page',
+            'It\'s awesome, I promise',
+            '...',
+            'Please ?',
+            '...',
+            'Stop scrolling and click me please! ☻',
+          ];
+        }
+      },
+
+      animationConfigOverlayPage1: {
+        type: Object,
+        value: function() {
+          return {
+            'entry': {
+              name: 'hero-animation',
+              id: 'hero',
+              toPage: this
+            },
+            'exit': {
+              name: 'hero-animation',
+              id: 'hero',
+              fromPage: this
+            }
+          };
+        }
+      },
+
+      animationConfigNormalPage2: {
+        type: Object,
+        value: function() {
+          return {
+            'entry': {
+              name: 'fade-in-animation',
+              node: this
+            },
+            'exit': {
+              name: 'fade-out-animation',
+              node: this
+            }
+          };
+        }
+      }
+    },
+
+    tapHandler: function(event) {
+      // Get the tapped card
+      var target = event.target;
+      while (target !== this && !target._templateInstance) {
+        target = target.parentNode;
+      }
+
+      // Configure the page animation
+      // As stated in the documentation, it is important to modify the page specific
+      // sharedElements (`sharedElementsOverlayPage` here) because the global `sharedElements`
+      // is dynamically managed by `NeonPageBehavior` and will likely be overriden.
+      // The same goes for the global `animationConfig`: You should not modify it yourself.
+      // If you need to dynamically modify an animation, modify the page specific on (ie
+      // `animationConfigOverlayPage` in this example).
+      this.sharedElementsOverlayPage1 = {
+        'hero': target
+      };
+
+      var detail = {
+        model : target.model
+      };
+
+      // Fire event to trigger the page transition by the parent component (index.html) 
+      this.fire('card-click', detail);
+    }
+  });
+  </script>
+</dom-module>
