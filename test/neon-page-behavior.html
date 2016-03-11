@@ -34,6 +34,17 @@
     </template>
   </test-fixture>
 
+  <test-fixture id="overlay"> <!-- hero transition for everything except from 0->2 or 2->0 -->
+    <template>
+      <neon-animated-pages attr-for-selected="name">
+        <demo-element-0 name="page0"></demo-element-0>
+        <demo-element-1 name="page1" overlay-page></demo-element-1>
+        <demo-element-2 name="page2" overlay-page></demo-element-2>
+        <demo-element-0 name="page3"></demo-element-0>
+      </neon-animated-pages>
+    </template>
+  </test-fixture>
+
 <script>
 suite('<neon-page-behavior>', function() {
 
@@ -285,7 +296,176 @@ suite('<neon-page-behavior>', function() {
         }, TIMEOUT);
       }, TIMEOUT);
     });
+  });
 
+  suite('overlay', function() {
+    var animatedPages;
+    var pages;
+    var page0, page1, page2, page3;
+
+    setup(function() {
+      animatedPages = fixture('overlay');
+      pages = Polymer.dom(animatedPages).children;
+      page0 = pages[0];
+      page1 = pages[1];
+      page2 = pages[2];
+      page3 = pages[3];
+      animatedPages.selected = 'page0';
+    });
+
+    test('background-page flag', function(done) {
+      // Launching test after a delay to let the 'setup' select to initial page
+      Polymer.Base.async(function() {
+        expect(page0.backgroundPage).to.be.equal(false);
+        expect(page1.backgroundPage).to.be.equal(false);
+        expect(page2.backgroundPage).to.be.equal(false);
+        expect(page3.backgroundPage).to.be.equal(false);
+
+        animatedPages.selected = 'page1';
+
+        Polymer.Base.async(function() {
+          expect(page0.backgroundPage).to.be.equal(true);
+          expect(page1.backgroundPage).to.be.equal(false);
+          expect(page2.backgroundPage).to.be.equal(false);
+          expect(page3.backgroundPage).to.be.equal(false);
+
+          animatedPages.selected = 'page2';
+
+          Polymer.Base.async(function() {
+            expect(page0.backgroundPage).to.be.equal(true);
+            expect(page1.backgroundPage).to.be.equal(false);
+            expect(page2.backgroundPage).to.be.equal(false);
+            expect(page3.backgroundPage).to.be.equal(false);
+
+            animatedPages.selected = 'page3';
+
+            Polymer.Base.async(function() {
+              expect(page0.backgroundPage).to.be.equal(false);
+              expect(page1.backgroundPage).to.be.equal(false);
+              expect(page2.backgroundPage).to.be.equal(false);
+              expect(page3.backgroundPage).to.be.equal(false);
+              
+              animatedPages.selected = 'page1';
+
+              // Final check
+              Polymer.Base.async(function() {
+                expect(page0.backgroundPage).to.be.equal(false);
+                expect(page1.backgroundPage).to.be.equal(false);
+                expect(page2.backgroundPage).to.be.equal(false);
+                expect(page3.backgroundPage).to.be.equal(true);
+                done();
+              }, TIMEOUT);
+            }, TIMEOUT);
+          }, TIMEOUT);
+        }, TIMEOUT);
+      }, TIMEOUT);
+    });
+
+    test('z-index', function(done) {
+      // Launching test after a delay to let the 'setup' select to initial page
+      Polymer.Base.async(function() {
+        expect(page0.style.zIndex).to.be.empty;
+        expect(page1.style.zIndex).to.be.empty;
+        expect(page2.style.zIndex).to.be.empty;
+        expect(page3.style.zIndex).to.be.empty;
+
+        animatedPages.selected = 'page1';
+
+        Polymer.Base.async(function() {
+          expect(page0.style.zIndex).to.be.empty;
+          expect(page1.style.zIndex).to.be.equal('1001');
+          expect(page2.style.zIndex).to.be.empty;
+          expect(page3.style.zIndex).to.be.empty;
+
+          animatedPages.selected = 'page2';
+
+          Polymer.Base.async(function() {
+            expect(page0.style.zIndex).to.be.empty;
+            expect(page1.style.zIndex).to.be.empty;
+            expect(page2.style.zIndex).to.be.equal('1002');
+            expect(page3.style.zIndex).to.be.empty;
+
+            animatedPages.selected = 'page3';
+
+            Polymer.Base.async(function() {
+              expect(page0.style.zIndex).to.be.empty;
+              expect(page1.style.zIndex).to.be.empty;
+              expect(page2.style.zIndex).to.be.empty;
+              expect(page3.style.zIndex).to.be.empty;
+              
+              animatedPages.selected = 'page1';
+
+              // Final check
+              Polymer.Base.async(function() {
+                expect(page0.style.zIndex).to.be.empty;
+                expect(page1.style.zIndex).to.be.equal('1001');
+                expect(page2.style.zIndex).to.be.empty;
+                expect(page3.style.zIndex).to.be.empty;
+                done();
+              }, TIMEOUT);
+            }, TIMEOUT);
+          }, TIMEOUT);
+        }, TIMEOUT);
+      }, TIMEOUT);
+    });
+
+    test('shared-elements visibility', function(done) {
+      // Launching test after a delay to let the 'setup' select to initial page
+      Polymer.Base.async(function() {
+        expect(page0.sharedElementsPage1Entry.hero.style.visibility).to.be.empty;
+        expect(page0.sharedElementsPage1Exit.hero.style.visibility).to.be.empty;
+        expect(page1.sharedElements.hero.style.visibility).to.be.empty;
+        expect(page2.sharedElementsPage1.hero.style.visibility).to.be.empty;
+
+        animatedPages.selected = 'page1';
+
+        Polymer.Base.async(function() {
+          expect(page0.sharedElementsPage1Entry.hero.style.visibility).to.be.empty;
+          expect(page0.sharedElementsPage1Exit.hero.style.visibility).to.be.equal('hidden');
+          expect(page1.sharedElements.hero.style.visibility).to.be.empty;
+          expect(page2.sharedElementsPage1.hero.style.visibility).to.be.empty;
+
+          animatedPages.selected = 'page0';
+
+          Polymer.Base.async(function() {
+            expect(page0.sharedElementsPage1Entry.hero.style.visibility).to.be.empty;
+            expect(page0.sharedElementsPage1Exit.hero.style.visibility).to.be.empty;
+            expect(page1.sharedElements.hero.style.visibility).to.be.empty;
+            expect(page2.sharedElementsPage1.hero.style.visibility).to.be.empty;
+
+            animatedPages.selected = 'page1';
+
+            Polymer.Base.async(function() {
+              expect(page0.sharedElementsPage1Entry.hero.style.visibility).to.be.empty;
+              expect(page0.sharedElementsPage1Exit.hero.style.visibility).to.be.equal('hidden');
+              expect(page1.sharedElements.hero.style.visibility).to.be.empty;
+              expect(page2.sharedElementsPage1.hero.style.visibility).to.be.empty;
+              
+              animatedPages.selected = 'page2';
+
+              // Final check
+              Polymer.Base.async(function() {
+                expect(page0.sharedElementsPage1Entry.hero.style.visibility).to.be.empty;
+                expect(page0.sharedElementsPage1Exit.hero.style.visibility).to.be.equal('hidden');
+                expect(page1.sharedElements.hero.style.visibility).to.be.empty;
+                expect(page2.sharedElementsPage1.hero.style.visibility).to.be.empty;
+                
+                animatedPages.selected = 'page3';
+
+                // Final check
+                Polymer.Base.async(function() {
+                  expect(page0.sharedElementsPage1Entry.hero.style.visibility).to.be.empty;
+                  expect(page0.sharedElementsPage1Exit.hero.style.visibility).to.be.empty;
+                  expect(page1.sharedElements.hero.style.visibility).to.be.empty;
+                  expect(page2.sharedElementsPage1.hero.style.visibility).to.be.empty;
+                  done();
+                }, TIMEOUT);
+              }, TIMEOUT);
+            }, TIMEOUT);
+          }, TIMEOUT);
+        }, TIMEOUT);
+      }, TIMEOUT);
+    });
   });
   
   // Check a neon-behavior-event
