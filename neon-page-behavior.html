@@ -685,6 +685,7 @@ _index.html_
 
       if (eventToFire) {
         this._fireNeonPageEvent(eventToFire, this._getPageValue(event.detail.fromPage), event.detail.fromPage, this._getPageValue(event.detail.toPage), event.detail.toPage);
+        this._restoreDefaultAnimationConfig();
       }
       this._set_wasBackgroundPage(false);
     },
@@ -715,6 +716,14 @@ _index.html_
         this.animationConfig = this._getAnimationConfigForPage(transitionPageValue);
         this.sharedElements = this._prevSharedElements = this._getSharedElementsForPage(transitionPageValue, this.selectedPage);
       }
+    },
+
+    /**
+     * Restore the default animation configuration and shared elements.
+     */
+    _restoreDefaultAnimationConfig: function() {
+      this.animationConfig = this._defaultAnimationConfig;
+      this.sharedElements = this._defaultSharedElements;
     },
 
     /**
