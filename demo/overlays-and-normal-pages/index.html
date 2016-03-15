@@ -76,17 +76,14 @@
   var scope = document.querySelector('template[is="dom-bind"]');
 
   scope.goToRequiredPage = function(e) {
-    console.log('goToRequiredPage', e.detail);
     scope.selected = e.detail;
   };
   
   scope.goToNormalPage1 = function() {
-    console.log('goToNormalPage1');
     scope.selected = 'normalPage1';
   };
 
   scope.goToOverlayPage1 = function(event) {
-    console.log('goToOverlayPage1', event.detail ? event.detail.model : undefined);
     if (event.detail && event.detail.model) {
       scope.$.overlayPage1.model = event.detail.model;
     }
