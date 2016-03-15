@@ -18,8 +18,7 @@
 <style is="custom-style">
   :host {
     @apply(--layout-vertical);
-    @apply(--layout-center);
-    @apply(--layout-center-justified);
+    @apply(--layout-center-center);
   }
 
   #fixed {
@@ -29,7 +28,7 @@
   }
 
   sample-card {
-    margin: auto 32px;
+    max-width: calc(100% - 32px);
   }
 
   #buttonContainer {

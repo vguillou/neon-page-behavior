@@ -17,12 +17,11 @@
   :host {
     background-color: rgba(0, 0, 0, 0.66);
     @apply(--layout-vertical);
-    @apply(--layout-center);
-    @apply(--layout-center-justified);
+    @apply(--layout-center-center);
   }
 
   sample-card {
-    margin: auto 32px;
+    max-width: calc(100% - 32px);
   }
 </style>
 <template>
