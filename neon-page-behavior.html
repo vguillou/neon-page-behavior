@@ -469,17 +469,17 @@ _index.html_
     attached: function() {
       if (this.parentElement.localName === 'neon-animated-pages') {
         // Initialize the handler
-        this._boundIronSelectHandler = this._pageChanged.bind(this);
-        this._boundNeonAnimationFinishedHandler = this._neonAnimationFinished.bind(this);
-        this.parentElement.addEventListener('iron-select', this._boundIronSelectHandler);
-        this.parentElement.addEventListener('neon-animation-finish', this._boundNeonAnimationFinishedHandler);
+        this._boundPageChangedHandler = this._pageChanged.bind(this);
+        this._boundTransitionFinishedHandler = this._transitionFinished.bind(this);
+        this.parentElement.addEventListener('selected-item-changed', this._boundPageChangedHandler);
+        this.parentElement.addEventListener('neon-animation-finish', this._boundTransitionFinishedHandler);
       }
     },
 
     detached: function() {
       if (this.parentElement.localName === 'neon-animated-pages') {
-        this.parentElement.removeEventListener('iron-select', this._boundIronSelectHandler);
-        this.parentElement.removeEventListener('neon-animation-finish', this._boundNeonAnimationFinishedHandler);
+        this.parentElement.removeEventListener('selected-item-changed', this._boundPageChangedHandler);
+        this.parentElement.removeEventListener('neon-animation-finish', this._boundTransitionFinishedHandler);
       }
     },
 
@@ -570,7 +570,8 @@ _index.html_
      * sets the `animationConfig` to be used according to the original and destination pages.
      */
     _pageChanged: function(event) {
-      if (event && event.target === this.parentElement) {
+      if (Polymer.dom(event).rootTarget === this.parentElement && this.parentElement.selectedItem) {
+
         // transitionPageValue is the page we transition from or to.
         // Set to null we might get an undefined in case of the initial transition
         var transitionPageValue = null, transitionPage, eventToFire;
@@ -661,7 +662,7 @@ _index.html_
     /**
      * Called when the displayed page has been changed. Fires 'finish' events.
      */
-    _neonAnimationFinished: function(event) {
+    _transitionFinished: function(event) {
       var eventToFire;
       if (event.detail.toPage === this) {
         eventToFire = 'entry-animation-finish';
