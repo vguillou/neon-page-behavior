@@ -1,6 +1,6 @@
 {
   "name": "neon-page-behavior",
-  "version": "1.1.3",
+  "version": "1.2.0",
   "authors": [
     "Vincent Guillou <vin.guillou@gmail.com>"
   ],
@@ -36,12 +36,12 @@
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.1.4",
-    "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.2.2",
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.3.0",
     "neon-animation": "PolymerElements/neon-animation#^1.1.0",
-    "paper-styles": "PolymerElements/paper-styles#^1.1.3",
-    "paper-header-panel": "PolymerElements/paper-header-panel#^1.1.2",
+    "paper-styles": "PolymerElements/paper-styles#^1.1.4",
+    "paper-header-panel": "PolymerElements/paper-header-panel#^1.1.4",
     "paper-toolbar": "PolymerElements/paper-toolbar#^1.1.4",
-    "paper-tabs": "PolymerElements/paper-tabs#^1.3.3",
+    "paper-tabs": "PolymerElements/paper-tabs#^1.3.7",
     "paper-button": "PolymerElements/paper-button#^1.0.11",
     "paper-material": "PolymerElements/paper-material#^1.0.6",
     "web-component-tester": "*"
