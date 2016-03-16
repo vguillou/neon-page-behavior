@@ -141,6 +141,8 @@ _my-neon-page.html_
       ...
 ```
 
+
+
 <a name="animation"></a>
 ## Declaring different animation configurations
 
@@ -300,6 +302,8 @@ animationConfig: {
 }
 ```
 
+
+
 <a name="animation_config"></a>
 ### animationConfig
 
@@ -328,19 +332,18 @@ __`sharedElements` + value representing the page to transition from/to + `Entry`
 (ie if `pageValue`='home-alone' and entering this page from the page 'home-alone', the `sharedElementsHomeAloneEntry` property will be used if it is defined, `sharedElementsHomeAlone` otherwise and `sharedElements` if none of the 2 aforementioned properties are defined).
 
 
+### Usefull to know:
+- Under the hood, this behavior swaps the `animationConfig` and `sharedElements` properties of your page with the page-specific ones (for example `animationConfigMyPage` and `sharedElementsMyPage`) for the duration of the transition.
+- A direct consequence of this implementation is that if you need to setup dynamic transitions, for example by using the clicked element of a list as the target node of an animation, you must modify the page-specific `animationConfig` and `sharedElements` (for example `animationConfigMyPage` and `sharedElementsMyPage`) and not the global `animationConfig` and `sharedElements` directly.
+
+
+
 <a name="overlay"></a>
-## Setup Overlay page
+## Setup an Overlay page
 
 __`NeonPageBehavior` offers a solution to declaratively setup overlay pages__, simply by adding the `overlay-page` attribute to your page(s).
 This will allow the page to be displayed over the previously selected one (which will be given the `background-page` attribute).
 No styling (other than setting the `z-index` to appear on top) is done, so this remains entirely up to the developer.
-
-This feature comes with a few limitations however :
-- It is not possible to display nested overlay pages (this is a pretty bad UX practice).
-- For overlay pages to be displayed properly, __all__ children of the
-[`<neon-animated-pages>`](https://github.com/PolymerElements/neon-animation#page-transitions)
-must be including the `NeonPageBehavior`.
-- An overlay page is styled to appear on top of the others by setting its CSS `z-index` property (to `1001`). You must ensure no element in a background page has a higher `z-index`.
 
 #### Example
 
@@ -351,6 +354,16 @@ _index.html_
   <overlay-page name="overlayPage" overlay-page></overlay-page>
 </neon-animated-pages>
 ```
+
+### Usefull to know:
+- It is not possible to display nested overlay pages (this is a pretty bad UX practice).
+- For overlay pages to be displayed properly, __all__ children (pages) of the
+[`<neon-animated-pages>`](https://github.com/PolymerElements/neon-animation#page-transitions)
+must be including the `NeonPageBehavior`.
+- An overlay page is styled to appear on top of the others by setting its CSS `z-index` property (to `1001`). You must ensure no element in a background page has a higher `z-index`.
+- If a page transitions to a `background-page` state (ie is displayed under an overlay page), the hypothetical `sharedElements` of this transition will be hidden automatically, until the page stops being a `background-page`. You may set the `backgroundPageShowsSharedElements` attribute if you want to prevent this (you probably do not, as the `sharedElements` will then awkwardly "pop" back after the transition).
+
+
 
 ## Demos
 
