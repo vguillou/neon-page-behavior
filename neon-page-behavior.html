@@ -382,9 +382,9 @@ _index.html_
 
     properties: {
       /**
-       * Flag automatically set to `true` only if this page is the one selected, ie currently
+       * Attribute automatically set only if this page is the one selected, ie currently
        * displayed. If an overlay page is being displayed over another page, only the overlay
-       * page has this flag set to `true`.
+       * page has this flag set.
        */
       selectedPage: {
         type: Boolean,
@@ -395,7 +395,7 @@ _index.html_
       },
 
       /**
-       * Set to `true` if you want the page to be an overlay page,
+       * Set this attribute if you want the page to be an overlay page,
        * meaning that the previous page will stay visible behind it.
        */
       overlayPage: {
@@ -404,7 +404,7 @@ _index.html_
       },
 
       /**
-       * Flag automatically set to `true` only if this page is displayed in the background,
+       * Attribute automatically set only if this page is displayed in the background,
        * under an overlay page.
        */
       backgroundPage: {
@@ -416,8 +416,23 @@ _index.html_
       },
 
       /**
-       * Flag automatically set to `true` only if this page was being displayed in the background
-       * and won't be after the next transition.
+       * `backgroundPageShowsSharedElements`
+       *
+       * If a page transitions to a `background-page` state (ie is displayed under an overlay page), 
+       * the hypothetical `sharedElements` of this transition will be hidden automatically, until
+       * the page stops being a `background-page`.
+       *
+       * Set this attribute if you want to prevent this (you probably do not want to do that,
+       * as the `sharedElements` will then awkwardly "pop" back after the transition).
+       */
+      backgroundPageShowsSharedElements: {
+        type: Boolean,
+        value: false
+      },
+
+      /**
+       * Flag automatically set only if this page was being displayed in the background
+       * and automatically unset after the transition.
        */
       _wasBackgroundPage: {
         type: Boolean,
@@ -731,7 +746,7 @@ _index.html_
      * Change the CSS `visibility` property of a set of sharedElements.
      */
     _toggleSharedElementsVisibility: function(sharedElements, visible) {
-      if (sharedElements) {
+      if (sharedElements && !this.backgroundPageShowsSharedElements) {
         for (var sharedId in sharedElements) {
           if (sharedElements.hasOwnProperty(sharedId) && sharedElements[sharedId] && sharedElements[sharedId].style) {
             sharedElements[sharedId].style.visibility = visible ? '' : 'hidden';
