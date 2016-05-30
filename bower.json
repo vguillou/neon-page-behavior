@@ -4,7 +4,7 @@
   "authors": [
     "Vincent Guillou <vin.guillou@gmail.com>"
   ],
-  "description": "Make the most of Polymer's 'neon-animated-pages' effortlessly. NeonPageBehavior fires events allowing more control over a page's lifecycle, and allows your page element to use a different animation-configuration when transitioning to each different page.",
+  "description": "NeonPageBehavior introduces a page lifecycle, page overlay and accepts different animation-config for transitioning to each of your pages",
   "keywords": [
     "web-components",
     "web-component",
